@@ -1,0 +1,45 @@
+﻿@model IEnumerable<ProyectoPyme.Models.Productos>
+
+<h2>Productos</h2>
+
+@if (User.IsInRole("Admin"))
+{
+    <a asp-action="Create" class="btn btn-success">Nuevo Producto</a>
+    <br />
+    <br />
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Precio</th>
+            <th>Categoría</th>
+            <th>Disponible</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td>@p.Nombre</td>
+                <td>₡@p.Precio</td>
+                <td>@p.Categoria?.Nombre</td>
+                <td>@(p.Disponibilidad ? "Sí" : "No")</td>
+                <td>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@p.ProductoId">Editar</a>
+                        <span> | </span>
+                        <a asp-action="Delete" asp-route-id="@p.ProductoId">Eliminar</a>
+                    }
+                    else
+                    {
+                        <span>Solo lectura</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

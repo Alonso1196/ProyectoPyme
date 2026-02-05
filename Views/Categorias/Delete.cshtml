@@ -1,0 +1,14 @@
+﻿@model ProyectoPyme.Models.Categoria
+
+<h2>Eliminar Categoría</h2>
+
+<p>
+    ¿Está seguro que desea eliminar la categoría
+    <strong>@Model.Nombre</strong>?
+</p>
+
+<form method="post">
+    <input type="hidden" asp-for="CategoriaId" />
+    <button type="submit">Eliminar</button>
+    <a asp-action="Index">Cancelar</a>
+</form>
