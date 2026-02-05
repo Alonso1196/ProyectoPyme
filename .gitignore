@@ -1,4 +1,5 @@
 .vs/
+wwwroot/images/Productos/
 bin/
 obj/
 *.user

@@ -1,45 +1,60 @@
 ﻿@model IEnumerable<ProyectoPyme.Models.Productos>
 
-<h2>Productos</h2>
-
-@if (User.IsInRole("Admin"))
-{
-    <a asp-action="Create" class="btn btn-success">Nuevo Producto</a>
-    <br />
-    <br />
+@{
+    ViewData["Title"] = "Productos";
 }
 
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Precio</th>
-            <th>Categoría</th>
-            <th>Disponible</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var p in Model)
-        {
-            <tr>
-                <td>@p.Nombre</td>
-                <td>₡@p.Precio</td>
-                <td>@p.Categoria?.Nombre</td>
-                <td>@(p.Disponibilidad ? "Sí" : "No")</td>
-                <td>
+<div class="page-header">
+    <div>
+        <h2>Productos</h2>
+        <p class="muted">Disponibilidad de artículos</p>
+    </div>
+
+    @if (User.IsInRole("Admin"))
+    {
+        <a href="/Productos/Create" class="btn primary">+ Nuevo producto</a>
+    }
+</div>
+
+<div class="card-grid">
+    @foreach (var p in Model)
+    {
+        <div class="card">
+            @if (!string.IsNullOrEmpty(p.RutaImagen))
+            {
+                <img src="@p.RutaImagen" alt="@p.Nombre" class="product-img" />
+            }
+            else
+            {
+                <div class="img-placeholder">Sin imagen</div>
+            }
+
+            <div class="card-body">
+                <h3 class="card-title">@p.Nombre</h3>
+
+                <div class="meta">
+                    <span class="price">₡@p.Precio</span>
+                    <span class="pill @(p.Disponibilidad ? "ok" : "bad")">
+                        @(p.Disponibilidad ? "Disponible" : "No disponible")
+                    </span>
+                </div>
+
+                <p class="muted">Categoría: <strong>@p.Categoria?.Nombre</strong></p>
+                <p class="muted">Esencia: <strong>@p.Esencia?.Nombre</strong></p>
+
+
+                <div class="actions">
                     @if (User.IsInRole("Admin"))
                     {
-                        <a asp-action="Edit" asp-route-id="@p.ProductoId">Editar</a>
-                        <span> | </span>
-                        <a asp-action="Delete" asp-route-id="@p.ProductoId">Eliminar</a>
+                        <a href="/Productos/Edit/@p.ProductoId" class="btn ghost">Editar</a>
+                        <a href="/Productos/Delete/@p.ProductoId" class="btn danger">Eliminar</a>
                     }
                     else
                     {
-                        <span>Solo lectura</span>
+                        <span class="muted">Solo lectura</span>
                     }
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                </div>
+            </div>
+        </div>
+    }
+</div>

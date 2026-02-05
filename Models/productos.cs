@@ -20,5 +20,11 @@ namespace ProyectoPyme.Models
 
         public string? RutaImagen { get; set; }
 
+        
+        public int EsenciaId { get; set; }
+        public Esencia? Esencia { get; set; }
+
+
+
     }
 }

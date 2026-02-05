@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProyectoPyme.Models;
-using Microsoft.AspNetCore.Http;
 using System.IO;
-using Microsoft.AspNetCore.Authorization;
 
 namespace ProyectoPyme.Controllers
 {
@@ -18,25 +18,26 @@ namespace ProyectoPyme.Controllers
         }
 
         // ✅ Público: Visitante / Cliente / Admin
-        // GET: Productos
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            var Productos = _context.Productos.Include(p => p.Categoria);
-            return View(await Productos.ToListAsync());
+            var productos = _context.Productos
+                .Include(p => p.Categoria)
+                .Include(p => p.Esencia);
+
+            return View(await productos.ToListAsync());
         }
 
-        // ✅ Solo Admin
-        // GET: Crear Producto
+        // ✅ Solo Admin (GET)
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             ViewBag.Categorias = new SelectList(_context.Categorias, "CategoriaId", "Nombre");
+            ViewBag.Esencias = new SelectList(_context.Esencias, "EsenciaId", "Nombre");
             return View();
         }
 
-        // ✅ Solo Admin
-        // POST: Crear Producto (+ imagen)
+        // ✅ Solo Admin (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
@@ -45,10 +46,11 @@ namespace ProyectoPyme.Controllers
             if (!ModelState.IsValid)
             {
                 ViewBag.Categorias = new SelectList(_context.Categorias, "CategoriaId", "Nombre", producto.CategoriaId);
+                ViewBag.Esencias = new SelectList(_context.Esencias, "EsenciaId", "Nombre", producto.EsenciaId);
                 return View(producto);
             }
 
-            // ✅ Guardar imagen en wwwroot/images/Productos
+            // Guardar imagen
             if (Imagen != null && Imagen.Length > 0)
             {
                 var carpeta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "Productos");
@@ -72,8 +74,7 @@ namespace ProyectoPyme.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // ✅ Solo Admin
-        // GET: Editar Producto
+        // ✅ Solo Admin (GET)
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -83,11 +84,12 @@ namespace ProyectoPyme.Controllers
             if (producto == null) return NotFound();
 
             ViewBag.Categorias = new SelectList(_context.Categorias, "CategoriaId", "Nombre", producto.CategoriaId);
+            ViewBag.Esencias = new SelectList(_context.Esencias, "EsenciaId", "Nombre", producto.EsenciaId);
+
             return View(producto);
         }
 
-        // ✅ Solo Admin
-        // POST: Editar Producto (+ opcional nueva imagen)
+        // ✅ Solo Admin (POST) - conserva imagen si no se sube una nueva
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
@@ -95,22 +97,28 @@ namespace ProyectoPyme.Controllers
         {
             if (id != producto.ProductoId) return NotFound();
 
-            if (!ModelState.IsValid)
-            {
-                ViewBag.Categorias = new SelectList(_context.Categorias, "CategoriaId", "Nombre", producto.CategoriaId);
-                return View(producto);
-            }
-
-            var productoDb = await _context.Productos.AsNoTracking()
+            // Traer registro real para conservar RutaImagen
+            var productoDb = await _context.Productos
+                .AsNoTracking()
                 .FirstOrDefaultAsync(p => p.ProductoId == id);
 
             if (productoDb == null) return NotFound();
 
+            // Mantener imagen anterior si no suben una nueva
             producto.RutaImagen = productoDb.RutaImagen;
 
+            // Si ModelState falla, devolver la vista con combos y con RutaImagen intacta
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Categorias = new SelectList(_context.Categorias, "CategoriaId", "Nombre", producto.CategoriaId);
+                ViewBag.Esencias = new SelectList(_context.Esencias, "EsenciaId", "Nombre", producto.EsenciaId);
+                return View(producto);
+            }
+
+            // Si subieron una nueva imagen, guardar y reemplazar
             if (Imagen != null && Imagen.Length > 0)
             {
-                var carpeta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "productos");
+                var carpeta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "Productos");
                 Directory.CreateDirectory(carpeta);
 
                 var ext = Path.GetExtension(Imagen.FileName);
@@ -122,35 +130,28 @@ namespace ProyectoPyme.Controllers
                     await Imagen.CopyToAsync(stream);
                 }
 
+                // borrar imagen anterior del disco (opcional)
                 if (!string.IsNullOrEmpty(productoDb.RutaImagen))
                 {
-                    var vieja = productoDb.RutaImagen.TrimStart('/').Replace("/", Path.DirectorySeparatorChar.ToString());
+                    var vieja = productoDb.RutaImagen.TrimStart('/')
+                        .Replace("/", Path.DirectorySeparatorChar.ToString());
+
                     var rutaViejaFisica = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", vieja);
 
                     if (System.IO.File.Exists(rutaViejaFisica))
                         System.IO.File.Delete(rutaViejaFisica);
                 }
 
-                producto.RutaImagen = $"/images/productos/{nombreArchivo}";
+                producto.RutaImagen = $"/images/Productos/{nombreArchivo}";
             }
 
-            try
-            {
-                _context.Update(producto);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!await _context.Productos.AnyAsync(e => e.ProductoId == producto.ProductoId))
-                    return NotFound();
-                throw;
-            }
+            _context.Update(producto);
+            await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }
 
-        // ✅ Solo Admin
-        // GET: Eliminar Producto (confirmación)
+        // ✅ Solo Admin (GET)
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -158,6 +159,7 @@ namespace ProyectoPyme.Controllers
 
             var producto = await _context.Productos
                 .Include(p => p.Categoria)
+                .Include(p => p.Esencia)
                 .FirstOrDefaultAsync(m => m.ProductoId == id);
 
             if (producto == null) return NotFound();
@@ -165,8 +167,7 @@ namespace ProyectoPyme.Controllers
             return View(producto);
         }
 
-        // ✅ Solo Admin
-        // POST: Confirmar eliminación
+        // ✅ Solo Admin (POST)
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
@@ -175,9 +176,12 @@ namespace ProyectoPyme.Controllers
             var producto = await _context.Productos.FindAsync(id);
             if (producto == null) return RedirectToAction(nameof(Index));
 
+            // borrar imagen física (opcional)
             if (!string.IsNullOrEmpty(producto.RutaImagen))
             {
-                var rel = producto.RutaImagen.TrimStart('/').Replace("/", Path.DirectorySeparatorChar.ToString());
+                var rel = producto.RutaImagen.TrimStart('/')
+                    .Replace("/", Path.DirectorySeparatorChar.ToString());
+
                 var rutaFisica = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", rel);
 
                 if (System.IO.File.Exists(rutaFisica))

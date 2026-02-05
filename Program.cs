@@ -40,6 +40,7 @@ app.UseStaticFiles();          // ✅ wwwroot (CSS/imagenes)
 
 app.UseRouting();
 
+
 app.UseAuthentication();       // ✅ necesario para login
 app.UseAuthorization();
 

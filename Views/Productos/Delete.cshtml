@@ -1,45 +1,28 @@
 ﻿@model ProyectoPyme.Models.Productos
 
 @{
-    ViewData["Title"] = "Eliminar Producto";
+    ViewData["Title"] = "Eliminar producto";
 }
 
-<h2>Eliminar Producto</h2>
-<hr />
-
-<h4>¿Seguro que deseas eliminar este producto?</h4>
-
-<div class="mb-3">
-    <dl class="row">
-        <dt class="col-sm-3">Nombre</dt>
-        <dd class="col-sm-9">@Model.Nombre</dd>
-
-        <dt class="col-sm-3">Precio</dt>
-        <dd class="col-sm-9">@Model.Precio.ToString("F2")</dd>
-
-        <dt class="col-sm-3">Categoría</dt>
-        <dd class="col-sm-9">@Model.Categoria?.Nombre</dd>
-
-        <dt class="col-sm-3">Disponibilidad</dt>
-        <dd class="col-sm-9">@(Model.Disponibilidad ? "Disponible" : "No disponible")</dd>
-
-        <dt class="col-sm-3">Imagen</dt>
-        <dd class="col-sm-9">
-            @if (!string.IsNullOrEmpty(Model.RutaImagen))
-            {
-                <img src="@Model.RutaImagen" style="width:120px; height:120px; object-fit:cover;" />
-            }
-            else
-            {
-                <span>Sin imagen</span>
-            }
-        </dd>
-    </dl>
+<div class="page-header">
+    <div>
+        <h2>Eliminar producto</h2>
+        <p class="muted">Esta acción no se puede deshacer</p>
+    </div>
+    <a href="/Productos" class="btn ghost">Volver</a>
 </div>
 
-<form asp-action="Delete" method="post">
-    @Html.AntiForgeryToken()
-    <input type="hidden" asp-for="ProductoId" />
-    <button type="submit" class="btn btn-danger">Eliminar</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
-</form>
+<div class="form-card">
+    <div class="delete-box">
+        <p>Vas a eliminar:</p>
+        <h3>@Model.Nombre</h3>
+        <p class="muted">Precio: ₡@Model.Precio</p>
+        <p class="muted">Categoría: @Model.Categoria?.Nombre</p>
+
+        <form asp-action="Delete" method="post" class="actions" style="margin-top:16px;">
+            <input type="hidden" asp-for="ProductoId" />
+            <button type="submit" class="btn danger">Sí, eliminar</button>
+            <a href="/Productos" class="btn ghost">Cancelar</a>
+        </form>
+    </div>
+</div>
