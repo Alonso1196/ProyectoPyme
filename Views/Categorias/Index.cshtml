@@ -1,41 +1,32 @@
 ﻿@model IEnumerable<ProyectoPyme.Models.Categoria>
 
-<h2>Categorías</h2>
-
-@if (User.IsInRole("Admin"))
-{
-    <p>
-        <a asp-action="Create" class="btn btn-success">Nueva Categoría</a>
-    </p>
+@{
+    ViewData["Title"] = "Categorías";
 }
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Descripción</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var c in Model)
-        {
-            <tr>
-                <td>@c.Nombre</td>
-                <td>@c.Descripcion</td>
-                <td>
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <a asp-action="Edit" asp-route-id="@c.CategoriaId">Editar</a>
-                        <span> | </span>
-                        <a asp-action="Delete" asp-route-id="@c.CategoriaId">Eliminar</a>
-                    }
-                    else
-                    {
-                        <span>Solo lectura</span>
-                    }
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<h2 class="page-title">Categorías</h2>
+
+<div class="top-actions">
+    @if (User.IsInRole("Admin"))
+    {
+        <a href="/Categorias/Create" class="btn primary">Nueva Categoría</a>
+    }
+</div>
+
+<div class="card-grid">
+    @foreach (var c in Model)
+    {
+        <div class="card">
+            <h3>@c.Nombre</h3>
+            <p class="muted">@c.Descripcion</p>
+
+            @if (User.IsInRole("Admin"))
+            {
+                <div class="actions">
+                    <a href="/Categorias/Edit/@c.CategoriaId" class="btn ghost">Editar</a>
+                    <a href="/Categorias/Delete/@c.CategoriaId" class="btn danger">Eliminar</a>
+                </div>
+            }
+        </div>
+    }
+</div>
