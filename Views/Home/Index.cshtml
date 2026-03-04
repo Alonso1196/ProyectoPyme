@@ -2,67 +2,98 @@
     ViewData["Title"] = "Inicio";
 }
 
-<div class="container" style="margin-top: 20px;">
-    <h2>ProyectoPyme</h2>
-    <p>Seleccione una opción para continuar.</p>
+<!-- HERO / CARRUSEL -->
+<section class="hero">
+    <div class="hero-overlay">
+        <div class="hero-content">
+            <h1>ProyectoPyme</h1>
+            <p>Gestión moderna de productos y categorías para pequeñas empresas.</p>
+            <a href="/Productos" class="btn-hero">Ver Productos</a>
+        </div>
+    </div>
+</section>
 
-    <div style="display:flex; gap:16px; flex-wrap:wrap; margin-top:16px;">
+<!-- SOBRE LA PYME -->
+<section class="about-section">
+    <div class="about-container">
+        <div class="about-img">
+            <img src="@Url.Content("~/img/about.jpg")" alt="Sobre la Pyme">
+        </div>
+        <div class="about-text">
+            <h2>Sobre Nuestra Pyme</h2>
+            <p>
+                La esencia que te define comienza aquí.
+                Este año abrimos nuestras puertas digitales para ofrecerte perfumes originales, sofisticados y pensados para cada ocasión.
+            </p>
+            <a href="/Categorias" class="btn-dark">Explorar Categorías</a>
+        </div>
+    </div>
+</section>
 
-        <!-- Productos (público) -->
-        <a href="/Productos" style="text-decoration:none;">
-            <div style="border:1px solid #ddd; padding:16px; border-radius:10px; width:260px;">
-                <h4 style="margin:0 0 8px;">📦 Productos</h4>
-                <p style="margin:0;">Ver disponibilidad de artículos.</p>
-            </div>
-        </a>
+<!-- PRODUCTOS DESTACADOS -->
+<section class="products-section">
+    <h2 class="section-title">Productos Destacados</h2>
 
-        <!-- Categorías (público) -->
-        <a href="/Categorias" style="text-decoration:none;">
-            <div style="border:1px solid #ddd; padding:16px; border-radius:10px; width:260px;">
-                <h4 style="margin:0 0 8px;">🏷️ Categorías</h4>
-                <p style="margin:0;">Explorar categorías disponibles.</p>
-            </div>
-        </a>
-
-        <!-- Login/Logout (condicional) -->
-        @if (User.Identity != null && User.Identity.IsAuthenticated)
+    <div class="product-grid">
+        @for (int i = 1; i <= 8; i++)
         {
-            <form method="post" action="/Cuentas/Logout">
-                <button type="submit" style="border:1px solid #dc3545; background:#dc3545; color:white; padding:16px; border-radius:10px; width:260px; text-align:left;">
-                    <h4 style="margin:0 0 8px;">🚪 Cerrar sesión</h4>
-                    <p style="margin:0;">Salir de la cuenta actual.</p>
-                </button>
-            </form>
-        }
-        else
-        {
-            <a href="/Cuentas/Login" style="text-decoration:none;">
-                <div style="border:1px solid #198754; background:#198754; color:white; padding:16px; border-radius:10px; width:260px;">
-                    <h4 style="margin:0 0 8px;">🔐 Iniciar sesión</h4>
-                    <p style="margin:0;">Acceder como Cliente o Admin.</p>
-                </div>
-            </a>
+            <div class="product-card">
+                <img src="@Url.Content("~/img/producto-demo.jpg")" alt="Producto demo">
+                <h4>Producto @i</h4>
+                <p>Descripción breve del producto.</p>
+                <span class="price">$149.00</span>
+            </div>
         }
     </div>
+</section>
 
-    <hr style="margin:24px 0;" />
+<!-- BLOG / NOTICIAS -->
+<section class="blog-section">
+    <h2 class="section-title">Noticias & Actualizaciones</h2>
 
-    @if (User.Identity != null && User.Identity.IsAuthenticated)
-    {
-        <p>
-            Sesión activa: <strong>@User.Identity.Name</strong>
-            @if (User.IsInRole("Admin"))
-            {
-                <span> (Admin)</span>
-            }
-            else if (User.IsInRole("Cliente"))
-            {
-                <span> (Cliente)</span>
-            }
-        </p>
-    }
-    else
-    {
-        <p><em>Estás navegando como visitante.</em></p>
-    }
-</div>
+    <div class="blog-grid">
+        @for (int i = 1; i <= 3; i++)
+        {
+            <div class="blog-card">
+                <img src="@Url.Content("~/img/blog-demo.jpg")" alt="Blog">
+                <h4>Título del Artículo @i</h4>
+                <p>
+                    Breve descripción del contenido del artículo
+                    relacionado con la Pyme o el sistema.
+                </p>
+                <a href="#" class="btn-light">Leer más</a>
+            </div>
+        }
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="main-footer">
+    <div class="footer-container">
+
+        <div>
+            <h4>ProyectoPyme</h4>
+            <p>Sistema MVC para gestión académica empresarial.</p>
+        </div>
+
+        <div>
+            <h4>Enlaces</h4>
+            <ul>
+                <li><a href="/Productos">Productos</a></li>
+                <li><a href="/Categorias">Categorías</a></li>
+                <li><a href="/Cuentas/Login">Login</a></li>
+            </ul>
+        </div>
+
+        <div>
+            <h4>Contacto</h4>
+            <p>Email: info@proyectopyme.com</p>
+            <p>Tel: +000 123456</p>
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        © @DateTime.Now.Year - ProyectoPyme
+    </div>
+</footer>
