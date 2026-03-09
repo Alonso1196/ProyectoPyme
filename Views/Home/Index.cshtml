@@ -13,57 +13,196 @@
     </div>
 </section>
 
-<!-- SOBRE LA PYME -->
-<section class="about-section">
-    <div class="about-container">
-        <div class="about-img">
-            <img src="@Url.Content("~/img/about.jpg")" alt="Sobre la Pyme">
-        </div>
-        <div class="about-text">
-            <h2>Sobre Nuestra Pyme</h2>
-            <p>
-                La esencia que te define comienza aquí.
-                Este año abrimos nuestras puertas digitales para ofrecerte perfumes originales, sofisticados y pensados para cada ocasión.
-            </p>
-            <a href="/Categorias" class="btn-dark">Explorar Categorías</a>
-        </div>
-    </div>
-</section>
-
 <!-- PRODUCTOS DESTACADOS -->
 <section class="products-section">
     <h2 class="section-title">Productos Destacados</h2>
 
     <div class="product-grid">
-        @for (int i = 1; i <= 8; i++)
-        {
-            <div class="product-card">
-                <img src="@Url.Content("~/img/producto-demo.jpg")" alt="Producto demo">
-                <h4>Producto @i</h4>
-                <p>Descripción breve del producto.</p>
-                <span class="price">$149.00</span>
-            </div>
-        }
+
+        <div class="product-card">
+            <img src="@Url.Content("~/images/Productos/Jean Paul Gaultier Le Male Le Parfum.jfif")" alt="Jean Paul Gaultier Le Male Le Parfum">
+            <h4>Jean Paul Gaultier Le Male Le Parfum</h4>
+            <p>Una fragancia intensa con notas de vainilla, cardamomo y lavanda que transmite elegancia y carácter.</p>
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                <a href="/Productos" class="btn-oferta">
+                    <i class="fa-solid fa-cart-shopping"></i> Comprar
+                </a>
+            }
+            else
+            {
+                <a href="/Cuentas/Login" class="btn-oferta">
+                    <i class="fa-solid fa-cart-shopping"></i> Iniciar sesión para comprar
+                </a>
+            }
+        </div>
+
+        <div class="product-card">
+            <img src="@Url.Content("~/images/Productos/Invictus legend Paco Rabanne.jfif")" alt="Invictus Legend Paco Rabanne">
+            <h4>Invictus Legend - Paco Rabanne</h4>
+            <p>Fragancia poderosa con notas marinas y amaderadas que evocan fuerza y espíritu ganador.</p>
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                <a href="/Productos" class="btn-oferta">
+                    <i class="fa-solid fa-cart-shopping"></i> Comprar
+                </a>
+            }
+            else
+            {
+                <a href="/Cuentas/Login" class="btn-oferta">
+                    <i class="fa-solid fa-cart-shopping"></i> Iniciar sesión para comprar
+                </a>
+            }
+        </div>
+
+        <div class="product-card">
+            <img src="@Url.Content("~/images/Productos/Carolina Herrera 212 Sexy.jfif")" alt="Carolina Herrera 212 Sexy">
+            <h4>Carolina Herrera 212 Sexy</h4>
+            <p>Aroma seductor con notas de vainilla, almizcle y pimienta rosa ideal para la noche.</p>
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                <a href="/Productos" class="btn-oferta">
+                    <i class="fa-solid fa-cart-shopping"></i> Comprar
+                </a>
+            }
+            else
+            {
+                <a href="/Cuentas/Login" class="btn-oferta">
+                    <i class="fa-solid fa-cart-shopping"></i> Iniciar sesión para comprar
+                </a>
+            }
+        </div>
+
+        <div class="product-card">
+            <img src="@Url.Content("~/images/Productos/Valentino Born In Roma Intense Eau De Parfum.jfif")" alt="Valentino Born In Roma Intense">
+            <h4>Valentino Born In Roma Intense</h4>
+            <p>Fragancia moderna con vainilla bourbon y ámbar que representa lujo y sofisticación.</p>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <a href="/Productos" class="btn-oferta">
+                    <i class="fa-solid fa-cart-shopping"></i> Comprar
+                </a>
+            }
+            else
+            {
+                <a href="/Cuentas/Login" class="btn-oferta">
+                    <i class="fa-solid fa-cart-shopping"></i> Iniciar sesión para comprar
+                </a>
+            }
+        </div>
+
     </div>
 </section>
 
-<!-- BLOG / NOTICIAS -->
-<section class="blog-section">
-    <h2 class="section-title">Noticias & Actualizaciones</h2>
+<!-- PERFUMES EN OFERTA -->
+<section class="ofertas-section">
+    <h2 class="section-title">🔥 Perfumes en Oferta</h2>
 
-    <div class="blog-grid">
-        @for (int i = 1; i <= 3; i++)
-        {
-            <div class="blog-card">
-                <img src="@Url.Content("~/img/blog-demo.jpg")" alt="Blog">
-                <h4>Título del Artículo @i</h4>
-                <p>
-                    Breve descripción del contenido del artículo
-                    relacionado con la Pyme o el sistema.
-                </p>
-                <a href="#" class="btn-light">Leer más</a>
-            </div>
-        }
+    <div class="ofertas-grid">
+
+        <!-- Perfume 1 -->
+        <div class="oferta-card">
+            <span class="badge-oferta">-30%</span>
+            <img src="@Url.Content("~/images/Productos/Sauvage Dior .jfif")" alt="Perfume Dior">
+            <h4>Dior Sauvage</h4>
+
+            <p class="precio">
+                <span class="precio-antiguo">$120</span>
+                <span class="precio-nuevo">$84</span>
+            </p>
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                <a href="/Productos" class="btn-oferta">
+                    <i class="fa-solid fa-cart-shopping"></i> Comprar
+                </a>
+            }
+            else
+            {
+                <a href="/Cuentas/Login" class="btn-oferta">
+                    <i class="fa-solid fa-cart-shopping"></i> Iniciar sesión para comprar
+                </a>
+            }
+        </div>
+
+        <!-- Perfume 2 -->
+        <div class="oferta-card">
+            <span class="badge-oferta">-25%</span>
+            <img src="@Url.Content("~/images/Productos/Bleu de Chanel.jfif")" alt="Perfume Chanel">
+            <h4>Chanel Bleu</h4>
+
+            <p class="precio">
+                <span class="precio-antiguo">$140</span>
+                <span class="precio-nuevo">$105</span>
+            </p>
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                <a href="/Productos" class="btn-oferta">
+                    <i class="fa-solid fa-cart-shopping"></i> Comprar
+                </a>
+            }
+            else
+            {
+                <a href="/Cuentas/Login" class="btn-oferta">
+                    <i class="fa-solid fa-cart-shopping"></i> Iniciar sesión para comprar
+                </a>
+            }
+        </div>
+
+        <!-- Perfume 3 -->
+        <div class="oferta-card">
+            <span class="badge-oferta">-20%</span>
+            <img src="@Url.Content("~/images/Productos/Versace Eros.jfif")" alt="Perfume Versace">
+            <h4>Versace Eros</h4>
+
+            <p class="precio">
+                <span class="precio-antiguo">$110</span>
+                <span class="precio-nuevo">$88</span>
+            </p>
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                <a href="/Productos" class="btn-oferta">
+                    <i class="fa-solid fa-cart-shopping"></i> Comprar
+                </a>
+            }
+            else
+            {
+                <a href="/Cuentas/Login" class="btn-oferta">
+                    <i class="fa-solid fa-cart-shopping"></i> Iniciar sesión para comprar
+                </a>
+            }
+        </div>
+
+        <!-- Perfume 4 -->
+        <div class="oferta-card">
+            <span class="badge-oferta">-35%</span>
+            <img src="@Url.Content("~/images/Productos/1million.jfif")" alt="Perfume Paco Rabanne">
+            <h4>1 Million</h4>
+
+            <p class="precio">
+                <span class="precio-antiguo">$130</span>
+                <span class="precio-nuevo">$84</span>
+            </p>
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                <a href="/Productos" class="btn-oferta">
+                    <i class="fa-solid fa-cart-shopping"></i> Comprar
+                </a>
+            }
+            else
+            {
+                <a href="/Cuentas/Login" class="btn-oferta">
+                    <i class="fa-solid fa-cart-shopping"></i> Iniciar sesión para comprar
+                </a>
+            }
+        </div>
+
     </div>
 </section>
 
@@ -73,7 +212,7 @@
 
         <div>
             <h4>ProyectoPyme</h4>
-            <p>Sistema MVC para gestión académica empresarial.</p>
+            <p>Catalogo de perfumes.</p>
         </div>
 
         <div>
@@ -87,8 +226,8 @@
 
         <div>
             <h4>Contacto</h4>
-            <p>Email: info@proyectopyme.com</p>
-            <p>Tel: +000 123456</p>
+            <p>Email: raqa96@icloud.com</p>
+            <p>Tel: +506 71048250</p>
         </div>
 
     </div>

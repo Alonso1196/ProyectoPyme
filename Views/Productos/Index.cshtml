@@ -20,6 +20,7 @@
     @foreach (var p in Model)
     {
         <div class="card">
+
             @if (!string.IsNullOrEmpty(p.RutaImagen))
             {
                 <img src="@p.RutaImagen" alt="@p.Nombre" class="product-img" />
@@ -30,10 +31,12 @@
             }
 
             <div class="card-body">
+
                 <h3 class="card-title">@p.Nombre</h3>
 
                 <div class="meta">
                     <span class="price">₡@p.Precio</span>
+
                     <span class="pill @(p.Disponibilidad ? "ok" : "bad")">
                         @(p.Disponibilidad ? "Disponible" : "No disponible")
                     </span>
@@ -42,18 +45,47 @@
                 <p class="muted">Categoría: <strong>@p.Categoria?.Nombre</strong></p>
                 <p class="muted">Esencia: <strong>@p.Esencia?.Nombre</strong></p>
 
-
                 <div class="actions">
+
+                    @* ADMIN *@
                     @if (User.IsInRole("Admin"))
                     {
                         <a href="/Productos/Edit/@p.ProductoId" class="btn ghost">Editar</a>
                         <a href="/Productos/Delete/@p.ProductoId" class="btn danger">Eliminar</a>
                     }
+
+                    @* USUARIO LOGUEADO *@
+                    else if (User.Identity.IsAuthenticated)
+                    {
+                        if (p.Disponibilidad)
+                        {
+                            <a asp-controller="Carrito"
+                               asp-action="Agregar"
+                               asp-route-id="@p.ProductoId"
+                               class="btn primary">
+                                <i class="fa-solid fa-cart-shopping"></i> Agregar al carrito
+                            </a>
+                        }
+                        else
+                        {
+                            <button class="btn ghost" disabled>
+                                No disponible
+                            </button>
+                        }
+                    }
+
+                    @* VISITANTE *@
                     else
                     {
-                        <span class="muted">Solo lectura</span>
+                        <a asp-controller="Cuentas"
+                           asp-action="Login"
+                           class="btn ghost">
+                            Iniciar sesión para comprar
+                        </a>
                     }
+
                 </div>
+
             </div>
         </div>
     }

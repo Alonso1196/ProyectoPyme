@@ -6,7 +6,14 @@
     <title>@ViewData["Title"] - ProyectoPyme</title>
 
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+
 <body>
 
     <!-- NAVBAR -->
@@ -14,23 +21,38 @@
         <div class="navbar-container">
 
             <div class="navbar-left">
-                <a href="/" class="logo">ProyectoPyme</a>
 
-                <a href="/Home/Index">Inicio</a>
-                <a href="/Productos">Productos</a>
-                <a href="/Categorias">Categorías</a>
+                <a href="/" class="logo">
+                    <img src="@Url.Content("~/images/Productos/TH.png")" alt="Perfumería Thompson" class="logo-img">
+                    
+                </a>
 
-                @if (User.IsInRole("Admin"))
-                {
-                    <a href="/Productos/Create" class="admin-link">Nuevo Producto</a>
-                }
+                <nav class="nav-links">
+                    <a href="/Home/Index"><i class="fa-solid fa-house"></i> Inicio</a>
+                    <a href="/Productos"><i class="fa-solid fa-box"></i> Productos</a>
+                    <a href="/Categorias"><i class="fa-solid fa-layer-group"></i> Categorías</a>
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a href="/Productos/Create" class="admin-link">
+                            <i class="fa-solid fa-plus"></i> Nuevo Producto
+                        </a>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Ordenes", "Admin")">Órdenes de Clientes</a>
+                        </li>
+                    }
+                </nav>
+
             </div>
 
             <div class="navbar-right">
+
                 @if (User.Identity != null && User.Identity.IsAuthenticated)
                 {
                     <span class="user-info">
+                        <i class="fa-solid fa-user"></i>
                         Hola, <strong>@User.Identity.Name</strong>
+
                         @if (User.IsInRole("Admin"))
                         {
                             <span class="badge admin">Admin</span>
@@ -42,13 +64,21 @@
                     </span>
 
                     <form method="post" action="/Cuentas/Logout">
-                        <button type="submit" class="btn logout">Cerrar sesión</button>
+                        <button type="submit" class="btn logout">
+                            <i class="fa-solid fa-right-from-bracket"></i> Salir
+                        </button>
                     </form>
                 }
                 else
                 {
-                    <a href="/Cuentas/Login" class="btn login">Iniciar sesión</a>
+                    <a href="/Cuentas/Login" class="btn login">
+                        <i class="fa-solid fa-right-to-bracket"></i> Iniciar sesión
+                    </a>
+                    <a asp-controller="Cuentas" asp-action="Register" class="btn login">
+                        Registrarse
+                    </a>
                 }
+
             </div>
 
         </div>
@@ -59,11 +89,9 @@
         @RenderBody()
     </main>
 
-    <!-- FOOTER -->
-    <footer class="footer">
-        &copy; 2026 - ProyectoPyme
-    </footer>
+
 
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>

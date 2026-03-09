@@ -12,6 +12,7 @@ namespace ProyectoPyme.Models
         public DbSet<Productos> Productos { get; set; }
         public DbSet<Categoria> Categorias { get; set; }
         public DbSet<Esencia> Esencias { get; set; }
+        public DbSet<Carrito> Carrito { get; set; }
 
 
 

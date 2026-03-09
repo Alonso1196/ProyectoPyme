@@ -1,0 +1,48 @@
+﻿@model ProyectoPyme.Models.DetalleOrdenViewModel
+
+<div class="main-container">
+    <h2 class="page-title">Detalle de la Orden <span class="muted">#@Model.Orden.NumeroOrden</span></h2>
+
+    <!-- Información del Cliente -->
+    <div class="form-card">
+        <h3>Información del Cliente</h3>
+        <p><strong>Nombre:</strong> @Model.Orden.NombreCliente</p>
+        <p><strong>Teléfono:</strong> @Model.Orden.Telefono</p>
+        <p><strong>Dirección:</strong> @Model.Orden.Direccion</p>
+        <p><strong>Fecha:</strong> @Model.Orden.Fecha.ToString("dd/MM/yyyy HH:mm")</p>
+        <p>
+            <strong>Estado:</strong>
+            <span class="badge @(Model.Orden.Estado == "Pendiente" ? "cliente" : "admin")">
+                @Model.Orden.Estado
+            </span>
+        </p>
+        <p><strong>Total:</strong> <span class="price">@Model.Orden.Total.ToString("C")</span></p>
+    </div>
+
+    <!-- Productos Comprados -->
+    <div class="products-section" style="margin-top: 30px;">
+        <h3>Productos Comprados</h3>
+        <div class="product-grid">
+            @foreach (var item in Model.Detalles)
+            {
+                <div class="product-card">
+                    <div class="card-body">
+                        <h4 class="card-title">@item.NombreProducto</h4>
+                        <div class="meta">
+                            <span>Cantidad: <strong>@item.Cantidad</strong></span>
+                            <span>Precio: <strong>@item.Precio.ToString("C")</strong></span>
+                        </div>
+                        <div class="price" style="margin-top: 8px;">
+                            Subtotal: <strong>@(item.Cantidad* item.Precio).ToString("C")</strong>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Acciones -->
+    <div class="actions" style="margin-top: 25px;">
+        <a href="@Url.Action("Ordenes", "Admin")" class="btn ghost">Volver a Órdenes</a>
+    </div>
+</div>

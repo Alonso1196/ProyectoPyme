@@ -21,6 +21,11 @@ namespace ProyectoPyme.Controllers
         {
             return View();
         }
+        [HttpGet]
+        public IActionResult Register()
+        {
+            return View();
+        }
 
         [HttpPost]
         public async Task<IActionResult> Login(string email, string password)
@@ -29,8 +34,8 @@ namespace ProyectoPyme.Controllers
                 .Include(u => u.Rol)
                 .FirstOrDefaultAsync(u => u.Email == email);
 
-            // TEMPORAL: compara en texto plano solo para probar que el login funciona
-            if (usuario == null || usuario.PasswordHash != password)
+            // Verificar usuario
+            if (usuario == null || usuario.PasswordHash != password || !usuario.Activo)
             {
                 ViewBag.Error = "Correo o contraseña incorrectos";
                 return View();
@@ -53,6 +58,37 @@ namespace ProyectoPyme.Controllers
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
             return RedirectToAction("Index", "Home");
+        }
+        [HttpPost]
+        public async Task<IActionResult> Register(string nombre, string email, string password, string confirmPassword)
+        {
+            if (password != confirmPassword)
+            {
+                ViewBag.Error = "Las contraseñas no coinciden";
+                return View();
+            }
+
+            var existe = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == email);
+
+            if (existe != null)
+            {
+                ViewBag.Error = "Este correo ya está registrado";
+                return View();
+            }
+
+            var usuario = new Usuario
+            {
+                Nombre = nombre,
+                Email = email,
+                PasswordHash = password, // temporal (luego se encripta)
+                Activo = true,
+                RolId = 2 // Cliente
+            };
+
+            _context.Usuarios.Add(usuario);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Login");
         }
 
         [HttpPost]

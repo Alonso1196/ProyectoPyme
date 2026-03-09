@@ -1,0 +1,83 @@
+﻿@model List<ProyectoPyme.Models.Carrito>
+
+@{
+    ViewData["Title"] = "Mi Carrito";
+}
+
+<h2 class="cart-title">🛒 Mi Carrito</h2>
+
+@if (!Model.Any())
+{
+    <div class="empty-cart">
+        <p>Tu carrito está vacío</p>
+        <a href="/Productos" class="btn primary">Ver perfumes</a>
+    </div>
+}
+else
+{
+
+    <div class="cart-container">
+
+        @foreach (var item in Model)
+        {
+            <div class="cart-item">
+
+                <div class="cart-img">
+                    <img src="@item.Producto.RutaImagen" alt="@item.Producto.Nombre" />
+                </div>
+
+                <div class="cart-info">
+
+                    <h3>@item.Producto.Nombre</h3>
+
+                    <p class="price">₡@item.Producto.Precio</p>
+
+                    <div class="quantity">
+
+                        <a asp-action="Restar"
+                           asp-route-id="@item.IdCarrito"
+                           class="qty-btn minus">-</a>
+
+                        <span class="qty-number">@item.Cantidad</span>
+
+                        <a asp-action="Sumar"
+                           asp-route-id="@item.IdCarrito"
+                           class="qty-btn plus">+</a>
+
+                    </div>
+
+                </div>
+
+                <div class="cart-total">
+
+                    <p class="subtotal">
+                        ₡@(item.Producto.Precio* item.Cantidad)
+                    </p>
+
+                    <a asp-action="Eliminar"
+                       asp-route-id="@item.IdCarrito"
+                       class="remove-btn">
+                        Eliminar
+                    </a>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+    <div class="cart-summary">
+
+        <h3>
+            Total:
+            ₡@Model.Sum(x => x.Producto.Precio * x.Cantidad)
+        </h3>
+
+        <a asp-controller="Orden" asp-action="Checkout" class="btn primary">
+            Finalizar compra
+        </a>
+
+    </div>
+
+}
