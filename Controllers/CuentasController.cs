@@ -33,15 +33,19 @@ namespace ProyectoPyme.Controllers
             var usuario = await _context.Usuarios
                 .Include(u => u.Rol)
                 .FirstOrDefaultAsync(u => u.Email == email);
-
-            // Verificar usuario
-            if (usuario == null || usuario.PasswordHash != password || !usuario.Activo)
+            //verificación y rechazo
+            if (usuario == null || usuario.PasswordHash != password)
             {
                 ViewBag.Error = "Correo o contraseña incorrectos";
                 return View();
             }
 
-            // ✅ AQUÍ estaba lo que faltaba
+            if (!usuario.Activo)
+            {
+                ViewBag.Error = "Su cuenta se encuentra inactiva. Por favor, contacte con un administrador para reactivarla.";
+                return View();
+            }
+
             var rolNombre = usuario.Rol?.Nombre ?? "Cliente";
 
             var claims = new List<Claim>
@@ -80,9 +84,9 @@ namespace ProyectoPyme.Controllers
             {
                 Nombre = nombre,
                 Email = email,
-                PasswordHash = password, // temporal (luego se encripta)
+                PasswordHash = password,//temporal (luego se encripta)
                 Activo = true,
-                RolId = 2 // Cliente
+                RolId = 2 //cliente aunque podria ser un enum (propuesta de Daniel)
             };
 
             _context.Usuarios.Add(usuario);
