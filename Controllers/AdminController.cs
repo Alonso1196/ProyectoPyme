@@ -2,6 +2,7 @@
 using ProyectoPyme.Models;
 using MySql.Data.MySqlClient;
 using System.Collections.Generic;
+using ProyectoPyme.Models;
 
 namespace ProyectoPyme.Controllers
 {

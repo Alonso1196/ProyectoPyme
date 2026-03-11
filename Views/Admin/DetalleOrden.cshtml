@@ -1,48 +1,101 @@
 ﻿@model ProyectoPyme.Models.DetalleOrdenViewModel
 
 <div class="main-container">
-    <h2 class="page-title">Detalle de la Orden <span class="muted">#@Model.Orden.NumeroOrden</span></h2>
 
-    <!-- Información del Cliente -->
-    <div class="form-card">
-        <h3>Información del Cliente</h3>
-        <p><strong>Nombre:</strong> @Model.Orden.NombreCliente</p>
-        <p><strong>Teléfono:</strong> @Model.Orden.Telefono</p>
-        <p><strong>Dirección:</strong> @Model.Orden.Direccion</p>
-        <p><strong>Fecha:</strong> @Model.Orden.Fecha.ToString("dd/MM/yyyy HH:mm")</p>
-        <p>
-            <strong>Estado:</strong>
-            <span class="badge @(Model.Orden.Estado == "Pendiente" ? "cliente" : "admin")">
-                @Model.Orden.Estado
-            </span>
-        </p>
-        <p><strong>Total:</strong> <span class="price">@Model.Orden.Total.ToString("C")</span></p>
+    <h2 class="page-title">
+        Detalle de la Orden
+        <span class="muted">#@Model.Orden.NumeroOrden</span>
+    </h2>
+
+    <!-- Información general -->
+    <div class="order-summary">
+
+        <div class="info-card">
+            <h3>Información del Cliente</h3>
+
+            <div class="info-grid">
+                <div>
+                    <span class="label">Nombre</span>
+                    <span class="value">@Model.Orden.NombreCliente</span>
+                </div>
+
+                <div>
+                    <span class="label">Teléfono</span>
+                    <span class="value">@Model.Orden.Telefono</span>
+                </div>
+
+                <div>
+                    <span class="label">Dirección</span>
+                    <span class="value">@Model.Orden.Direccion</span>
+                </div>
+
+                <div>
+                    <span class="label">Fecha</span>
+                    <span class="value">@Model.Orden.Fecha.ToString("dd/MM/yyyy HH:mm")</span>
+                </div>
+
+                <div>
+                    <span class="label">Estado</span>
+                    <span class="badge @(Model.Orden.Estado == "Pendiente" ? "badge-warning" : "badge-success")">
+                        @Model.Orden.Estado
+                    </span>
+                </div>
+
+                <div>
+                    <span class="label">Total</span>
+                    <span class="price">@Model.Orden.Total.ToString("C")</span>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <!-- Productos Comprados -->
-    <div class="products-section" style="margin-top: 30px;">
-        <h3>Productos Comprados</h3>
+
+    <!-- Productos -->
+    <div class="products-section">
+
+        <h3 class="section-title">Productos Comprados</h3>
+
         <div class="product-grid">
+
             @foreach (var item in Model.Detalles)
             {
                 <div class="product-card">
+
                     <div class="card-body">
+
                         <h4 class="card-title">@item.NombreProducto</h4>
-                        <div class="meta">
-                            <span>Cantidad: <strong>@item.Cantidad</strong></span>
-                            <span>Precio: <strong>@item.Precio.ToString("C")</strong></span>
+
+                        <div class="meta-row">
+                            <span>Cantidad</span>
+                            <strong>@item.Cantidad</strong>
                         </div>
-                        <div class="price" style="margin-top: 8px;">
-                            Subtotal: <strong>@(item.Cantidad* item.Precio).ToString("C")</strong>
+
+                        <div class="meta-row">
+                            <span>Precio</span>
+                            <strong>@item.Precio.ToString("C")</strong>
                         </div>
+
+                        <div class="subtotal">
+                            Subtotal
+                            <strong>@(item.Cantidad* item.Precio).ToString("C")</strong>
+                        </div>
+
                     </div>
+
                 </div>
             }
+
         </div>
+
     </div>
 
+
     <!-- Acciones -->
-    <div class="actions" style="margin-top: 25px;">
-        <a href="@Url.Action("Ordenes", "Admin")" class="btn ghost">Volver a Órdenes</a>
+    <div class="actions">
+        <a href="@Url.Action("Ordenes", "Admin")" class="btn-back">
+            ← Volver a Órdenes
+        </a>
     </div>
+
 </div>

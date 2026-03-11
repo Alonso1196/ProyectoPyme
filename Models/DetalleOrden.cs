@@ -1,5 +1,6 @@
 ﻿using ProyectoPyme.Models;
 
+
 public class DetalleOrden
 {
     public int IdDetalle { get; set; }
@@ -13,8 +14,3 @@ public class DetalleOrden
     public decimal Subtotal { get; internal set; }
 }
 
-public class DetalleOrdenViewModel
-{
-    public Orden Orden { get; set; }
-    public List<DetalleOrden> Detalles { get; set; }
-}
