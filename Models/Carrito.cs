@@ -18,3 +18,4 @@ namespace ProyectoPyme.Models
         public Productos Producto { get; set; }
     }
 }
+
