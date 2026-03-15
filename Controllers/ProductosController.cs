@@ -8,190 +8,244 @@ using System.IO;
 
 namespace ProyectoPyme.Controllers
 {
-    public class ProductosController : Controller
-    {
-        private readonly ApplicationDbContext _context;
+	public class ProductosController : Controller
+	{
+		private readonly ApplicationDbContext _context;
 
-        public ProductosController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+		public ProductosController(ApplicationDbContext context)
+		{
+			_context = context;
+		}
 
-        // ✅ Público: Visitante / Cliente / Admin
-        [AllowAnonymous]
-        public async Task<IActionResult> Index()
-        {
-            var productos = _context.Productos
-                .Include(p => p.Categoria)
-                .Include(p => p.Esencia);
+		// Público: Visitante / Cliente / Admin
+		[AllowAnonymous]
+		public async Task<IActionResult> Index()
+		{
+			var productos = _context.Productos
+				.Include(p => p.Categoria)
+				.Include(p => p.Esencia);
 
-            return View(await productos.ToListAsync());
-        }
+			return View(await productos.ToListAsync());
+		}
 
-        // ✅ Solo Admin (GET)
-        [Authorize(Roles = "Admin")]
-        public IActionResult Create()
-        {
-            ViewBag.Categorias = new SelectList(_context.Categorias, "CategoriaId", "Nombre");
-            ViewBag.Esencias = new SelectList(_context.Esencias, "EsenciaId", "Nombre");
-            return View();
-        }
+		// Solo Admin (GET)
+		[Authorize(Roles = "Admin")]
+		public IActionResult Create()
+		{
+			CargarCombos();
+			return View();
+		}
 
-        // ✅ Solo Admin (POST)
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create(Productos producto, IFormFile? Imagen)
-        {
-            if (!ModelState.IsValid)
-            {
-                ViewBag.Categorias = new SelectList(_context.Categorias, "CategoriaId", "Nombre", producto.CategoriaId);
-                ViewBag.Esencias = new SelectList(_context.Esencias, "EsenciaId", "Nombre", producto.EsenciaId);
-                return View(producto);
-            }
+		// Solo Admin (POST)
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Roles = "Admin")]
+		public async Task<IActionResult> Create(Productos producto, IFormFile? Imagen)
+		{
+			ValidarProducto(producto, Imagen);
 
-            // Guardar imagen
-            if (Imagen != null && Imagen.Length > 0)
-            {
-                var carpeta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "Productos");
-                Directory.CreateDirectory(carpeta);
+			if (!ModelState.IsValid)
+			{
+				CargarCombos(producto.CategoriaId, producto.EsenciaId);
+				return View(producto);
+			}
 
-                var ext = Path.GetExtension(Imagen.FileName);
-                var nombreArchivo = $"{Guid.NewGuid()}{ext}";
-                var rutaFisica = Path.Combine(carpeta, nombreArchivo);
+			if (Imagen != null && Imagen.Length > 0)
+			{
+				producto.RutaImagen = await GuardarImagenAsync(Imagen);
+			}
 
-                using (var stream = new FileStream(rutaFisica, FileMode.Create))
-                {
-                    await Imagen.CopyToAsync(stream);
-                }
+			_context.Productos.Add(producto);
+			await _context.SaveChangesAsync();
 
-                producto.RutaImagen = $"/images/Productos/{nombreArchivo}";
-            }
+			TempData["Success"] = "Producto creado correctamente.";
+			return RedirectToAction(nameof(Index));
+		}
 
-            _context.Productos.Add(producto);
-            await _context.SaveChangesAsync();
+		// Solo Admin (GET)
+		[Authorize(Roles = "Admin")]
+		public async Task<IActionResult> Edit(int? id)
+		{
+			if (id == null)
+				return NotFound();
 
-            return RedirectToAction(nameof(Index));
-        }
+			var producto = await _context.Productos.FindAsync(id);
+			if (producto == null)
+				return NotFound();
 
-        // ✅ Solo Admin (GET)
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null) return NotFound();
+			CargarCombos(producto.CategoriaId, producto.EsenciaId);
+			return View(producto);
+		}
 
-            var producto = await _context.Productos.FindAsync(id);
-            if (producto == null) return NotFound();
+		// Solo Admin (POST)
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Roles = "Admin")]
+		public async Task<IActionResult> Edit(int id, Productos producto, IFormFile? Imagen)
+		{
+			if (id != producto.ProductoId)
+				return NotFound();
 
-            ViewBag.Categorias = new SelectList(_context.Categorias, "CategoriaId", "Nombre", producto.CategoriaId);
-            ViewBag.Esencias = new SelectList(_context.Esencias, "EsenciaId", "Nombre", producto.EsenciaId);
+			var productoDb = await _context.Productos
+				.AsNoTracking()
+				.FirstOrDefaultAsync(p => p.ProductoId == id);
 
-            return View(producto);
-        }
+			if (productoDb == null)
+				return NotFound();
 
-        // ✅ Solo Admin (POST) - conserva imagen si no se sube una nueva
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id, Productos producto, IFormFile? Imagen)
-        {
-            if (id != producto.ProductoId) return NotFound();
+			// Conservar imagen anterior por defecto
+			producto.RutaImagen = productoDb.RutaImagen;
 
-            // Traer registro real para conservar RutaImagen
-            var productoDb = await _context.Productos
-                .AsNoTracking()
-                .FirstOrDefaultAsync(p => p.ProductoId == id);
+			ValidarProducto(producto, Imagen);
 
-            if (productoDb == null) return NotFound();
+			if (!ModelState.IsValid)
+			{
+				CargarCombos(producto.CategoriaId, producto.EsenciaId);
+				return View(producto);
+			}
 
-            // Mantener imagen anterior si no suben una nueva
-            producto.RutaImagen = productoDb.RutaImagen;
+			if (Imagen != null && Imagen.Length > 0)
+			{
+				// Borrar imagen anterior si existía
+				if (!string.IsNullOrWhiteSpace(productoDb.RutaImagen))
+				{
+					var rutaViejaRelativa = productoDb.RutaImagen.TrimStart('/')
+						.Replace("/", Path.DirectorySeparatorChar.ToString());
 
-            // Si ModelState falla, devolver la vista con combos y con RutaImagen intacta
-            if (!ModelState.IsValid)
-            {
-                ViewBag.Categorias = new SelectList(_context.Categorias, "CategoriaId", "Nombre", producto.CategoriaId);
-                ViewBag.Esencias = new SelectList(_context.Esencias, "EsenciaId", "Nombre", producto.EsenciaId);
-                return View(producto);
-            }
+					var rutaViejaFisica = Path.Combine(
+						Directory.GetCurrentDirectory(),
+						"wwwroot",
+						rutaViejaRelativa
+					);
 
-            // Si subieron una nueva imagen, guardar y reemplazar
-            if (Imagen != null && Imagen.Length > 0)
-            {
-                var carpeta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "Productos");
-                Directory.CreateDirectory(carpeta);
+					if (System.IO.File.Exists(rutaViejaFisica))
+					{
+						System.IO.File.Delete(rutaViejaFisica);
+					}
+				}
 
-                var ext = Path.GetExtension(Imagen.FileName);
-                var nombreArchivo = $"{Guid.NewGuid()}{ext}";
-                var rutaFisica = Path.Combine(carpeta, nombreArchivo);
+				producto.RutaImagen = await GuardarImagenAsync(Imagen);
+			}
 
-                using (var stream = new FileStream(rutaFisica, FileMode.Create))
-                {
-                    await Imagen.CopyToAsync(stream);
-                }
+			_context.Update(producto);
+			await _context.SaveChangesAsync();
 
-                // borrar imagen anterior del disco (opcional)
-                if (!string.IsNullOrEmpty(productoDb.RutaImagen))
-                {
-                    var vieja = productoDb.RutaImagen.TrimStart('/')
-                        .Replace("/", Path.DirectorySeparatorChar.ToString());
+			TempData["Success"] = "Producto actualizado correctamente.";
+			return RedirectToAction(nameof(Index));
+		}
 
-                    var rutaViejaFisica = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", vieja);
+		// Solo Admin (GET)
+		[Authorize(Roles = "Admin")]
+		public async Task<IActionResult> Delete(int? id)
+		{
+			if (id == null)
+				return NotFound();
 
-                    if (System.IO.File.Exists(rutaViejaFisica))
-                        System.IO.File.Delete(rutaViejaFisica);
-                }
+			var producto = await _context.Productos
+				.Include(p => p.Categoria)
+				.Include(p => p.Esencia)
+				.FirstOrDefaultAsync(m => m.ProductoId == id);
 
-                producto.RutaImagen = $"/images/Productos/{nombreArchivo}";
-            }
+			if (producto == null)
+				return NotFound();
 
-            _context.Update(producto);
-            await _context.SaveChangesAsync();
+			return View(producto);
+		}
 
-            return RedirectToAction(nameof(Index));
-        }
+		// Solo Admin (POST)
+		[HttpPost, ActionName("Delete")]
+		[ValidateAntiForgeryToken]
+		[Authorize(Roles = "Admin")]
+		public async Task<IActionResult> DeleteConfirmed(int id)
+		{
+			var producto = await _context.Productos.FindAsync(id);
+			if (producto == null)
+				return RedirectToAction(nameof(Index));
 
-        // ✅ Solo Admin (GET)
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null) return NotFound();
+			if (!string.IsNullOrWhiteSpace(producto.RutaImagen))
+			{
+				var rutaRelativa = producto.RutaImagen.TrimStart('/')
+					.Replace("/", Path.DirectorySeparatorChar.ToString());
 
-            var producto = await _context.Productos
-                .Include(p => p.Categoria)
-                .Include(p => p.Esencia)
-                .FirstOrDefaultAsync(m => m.ProductoId == id);
+				var rutaFisica = Path.Combine(
+					Directory.GetCurrentDirectory(),
+					"wwwroot",
+					rutaRelativa
+				);
 
-            if (producto == null) return NotFound();
+				if (System.IO.File.Exists(rutaFisica))
+				{
+					System.IO.File.Delete(rutaFisica);
+				}
+			}
 
-            return View(producto);
-        }
+			_context.Productos.Remove(producto);
+			await _context.SaveChangesAsync();
 
-        // ✅ Solo Admin (POST)
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var producto = await _context.Productos.FindAsync(id);
-            if (producto == null) return RedirectToAction(nameof(Index));
+			TempData["Success"] = "Producto eliminado correctamente.";
+			return RedirectToAction(nameof(Index));
+		}
 
-            // borrar imagen física (opcional)
-            if (!string.IsNullOrEmpty(producto.RutaImagen))
-            {
-                var rel = producto.RutaImagen.TrimStart('/')
-                    .Replace("/", Path.DirectorySeparatorChar.ToString());
+		private void CargarCombos(int? categoriaId = null, int? esenciaId = null)
+		{
+			ViewBag.Categorias = new SelectList(_context.Categorias, "CategoriaId", "Nombre", categoriaId);
+			ViewBag.Esencias = new SelectList(_context.Esencias, "EsenciaId", "Nombre", esenciaId);
+		}
 
-                var rutaFisica = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", rel);
+		private void ValidarProducto(Productos producto, IFormFile? imagen)
+		{
+			if (producto.Precio <= 0)
+			{
+				ModelState.AddModelError("Precio", "El precio debe ser mayor a 0.");
+			}
 
-                if (System.IO.File.Exists(rutaFisica))
-                    System.IO.File.Delete(rutaFisica);
-            }
+			if (producto.Stock < 0)
+			{
+				ModelState.AddModelError("Stock", "El stock no puede ser negativo.");
+			}
 
-            _context.Productos.Remove(producto);
-            await _context.SaveChangesAsync();
+			if (producto.CategoriaId <= 0)
+			{
+				ModelState.AddModelError("CategoriaId", "Debe seleccionar una categoría válida.");
+			}
 
-            return RedirectToAction(nameof(Index));
-        }
-    }
+			if (producto.EsenciaId <= 0)
+			{
+				ModelState.AddModelError("EsenciaId", "Debe seleccionar una esencia válida.");
+			}
+
+			if (imagen != null && imagen.Length > 0)
+			{
+				var extensionesPermitidas = new[] { ".jpg", ".jpeg", ".png", ".webp" };
+				var extension = Path.GetExtension(imagen.FileName).ToLowerInvariant();
+
+				if (!extensionesPermitidas.Contains(extension))
+				{
+					ModelState.AddModelError("RutaImagen", "Solo se permiten imágenes JPG, JPEG, PNG o WEBP.");
+				}
+
+				if (imagen.Length > 2 * 1024 * 1024)
+				{
+					ModelState.AddModelError("RutaImagen", "La imagen no debe superar los 2 MB.");
+				}
+			}
+		}
+
+		private async Task<string> GuardarImagenAsync(IFormFile imagen)
+		{
+			var carpeta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "Productos");
+			Directory.CreateDirectory(carpeta);
+
+			var extension = Path.GetExtension(imagen.FileName).ToLowerInvariant();
+			var nombreArchivo = $"{Guid.NewGuid()}{extension}";
+			var rutaFisica = Path.Combine(carpeta, nombreArchivo);
+
+			using (var stream = new FileStream(rutaFisica, FileMode.Create))
+			{
+				await imagen.CopyToAsync(stream);
+			}
+
+			return $"/images/Productos/{nombreArchivo}";
+		}
+	}
 }

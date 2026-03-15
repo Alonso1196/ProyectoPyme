@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProyectoPyme.Models;
 
@@ -10,9 +11,11 @@ using ProyectoPyme.Models;
 namespace ProyectoPyme.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260315193427_AgregarStockAProductos")]
+    partial class AgregarStockAProductos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -153,17 +156,13 @@ namespace ProyectoPyme.Migrations
 
                     b.Property<string>("Nombre")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
+                        .HasColumnType("longtext");
 
                     b.Property<decimal>("Precio")
-                        .HasColumnType("decimal(10,2)");
+                        .HasColumnType("decimal(65,30)");
 
                     b.Property<string>("RutaImagen")
                         .HasColumnType("longtext");
-
-                    b.Property<int>("Stock")
-                        .HasColumnType("int");
 
                     b.HasKey("ProductoId");
 
@@ -189,18 +188,6 @@ namespace ProyectoPyme.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("roles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Nombre = "Admin"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Nombre = "Cliente"
-                        });
                 });
 
             modelBuilder.Entity("ProyectoPyme.Models.Usuario", b =>

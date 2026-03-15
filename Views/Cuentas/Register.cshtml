@@ -1,51 +1,54 @@
-﻿@{
+﻿@model ProyectoPyme.Models.ViewModels.RegisterViewModel
+
+@{
     ViewData["Title"] = "Registrarse";
 }
 
 <section class="login-section">
-
     <div class="login-card">
-
         <h2>Crear cuenta</h2>
 
-        @if (ViewBag.Error != null)
-        {
-            <p class="login-error">@ViewBag.Error</p>
-        }
+        <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
 
-        <form method="post">
+        <form asp-action="Register" method="post">
+            @Html.AntiForgeryToken()
 
             <div class="login-group">
-                <label>Nombre</label>
-                <input type="text" name="nombre" required />
+                <label asp-for="Nombre"></label>
+                <input asp-for="Nombre" type="text" />
+                <span asp-validation-for="Nombre" class="field-error"></span>
             </div>
 
             <div class="login-group">
-                <label>Correo</label>
-                <input type="email" name="email" required />
+                <label asp-for="Email">Correo</label>
+                <input asp-for="Email" type="email" />
+                <span asp-validation-for="Email" class="field-error"></span>
             </div>
 
             <div class="login-group">
-                <label>Contraseña</label>
-                <input type="password" name="password" required />
+                <label asp-for="Password">Contraseña</label>
+                <input asp-for="Password" type="password" />
+                <span asp-validation-for="Password" class="field-error"></span>
             </div>
 
             <div class="login-group">
-                <label>Confirmar contraseña</label>
-                <input type="password" name="confirmPassword" required />
+                <label asp-for="ConfirmPassword">Confirmar contraseña</label>
+                <input asp-for="ConfirmPassword" type="password" />
+                <span asp-validation-for="ConfirmPassword" class="field-error"></span>
             </div>
 
             <button type="submit" class="btn-oferta login-btn">
                 <i class="fa-solid fa-user-plus"></i> Registrarse
             </button>
-
         </form>
 
         <p class="login-link">
             ¿Ya tienes cuenta?
             <a asp-controller="Cuentas" asp-action="Login">Iniciar sesión</a>
         </p>
-
     </div>
-
 </section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

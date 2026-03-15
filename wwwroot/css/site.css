@@ -1158,3 +1158,39 @@ body {
     .btn-back:hover {
         background: #1f4fb0;
     }
+
+
+/* ===== VALIDACIONES LOGIN / REGISTER ===== */
+
+.validation-summary {
+    background: #fee2e2;
+    color: #dc2626;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+    .validation-summary:empty {
+        display: none;
+    }
+
+.field-error {
+    display: block;
+    color: #dc2626;
+    font-size: 13px;
+    margin-top: 6px;
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    text-align: left;
+}
+
+    .field-error:empty {
+        display: none;
+    }
+
+.input-validation-error {
+    border: 1px solid #dc2626 !important;
+    background-color: #fff8f8;
+}

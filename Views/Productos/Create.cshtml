@@ -20,6 +20,8 @@
 }
 
 <form asp-action="Create" method="post" enctype="multipart/form-data" class="form-card">
+    <div asp-validation-summary="ModelOnly" class="error"></div>
+
     <div class="form-grid">
         <div class="field">
             <label asp-for="Nombre"></label>
@@ -29,14 +31,30 @@
 
         <div class="field">
             <label asp-for="Precio"></label>
-            <input asp-for="Precio" class="input" />
+            <input asp-for="Precio" class="input" type="number" step="0.01" min="0.01" />
             <span asp-validation-for="Precio" class="error"></span>
         </div>
 
         <div class="field">
+            <label asp-for="Stock"></label>
+            <input asp-for="Stock" class="input" type="number" min="0" />
+            <span asp-validation-for="Stock" class="error"></span>
+        </div>
+
+        <div class="field">
             <label asp-for="CategoriaId">Categoría</label>
-            <select asp-for="CategoriaId" class="input" asp-items="ViewBag.Categorias"></select>
+            <select asp-for="CategoriaId" class="input" asp-items="ViewBag.Categorias">
+                <option value="">-- Seleccione una categoría --</option>
+            </select>
             <span asp-validation-for="CategoriaId" class="error"></span>
+        </div>
+
+        <div class="field">
+            <label asp-for="EsenciaId">Esencia</label>
+            <select asp-for="EsenciaId" class="input" asp-items="ViewBag.Esencias">
+                <option value="">-- Seleccione una esencia --</option>
+            </select>
+            <span asp-validation-for="EsenciaId" class="error"></span>
         </div>
 
         <div class="field">
@@ -50,8 +68,9 @@
 
         <div class="field full">
             <label>Imagen</label>
-            <input type="file" name="Imagen" class="input" accept="image/*" />
-            <p class="muted small">Formatos recomendados: JPG, PNG, WEBP.</p>
+            <input type="file" name="Imagen" class="input" accept=".jpg,.jpeg,.png,.webp" />
+            <p class="muted small">Formatos permitidos: JPG, JPEG, PNG, WEBP. Máximo 2 MB.</p>
+            <span asp-validation-for="RutaImagen" class="error"></span>
         </div>
     </div>
 
@@ -59,13 +78,6 @@
         <button type="submit" class="btn primary">Guardar</button>
         <a href="/Productos" class="btn ghost">Cancelar</a>
     </div>
-    <div class="field">
-        <label asp-for="EsenciaId">Esencia</label>
-        <select asp-for="EsenciaId" class="input" asp-items="ViewBag.Esencias"></select>
-        <span asp-validation-for="EsenciaId" class="error"></span>
-    </div>
-
-
 </form>
 
 @section Scripts {

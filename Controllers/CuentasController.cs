@@ -3,103 +3,121 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProyectoPyme.Models;
+using ProyectoPyme.Models.ViewModels;
 using System.Security.Claims;
 
 namespace ProyectoPyme.Controllers
 {
-    public class CuentasController : Controller
-    {
-        private readonly ApplicationDbContext _context;
+	public class CuentasController : Controller
+	{
+		private readonly ApplicationDbContext _context;
 
-        public CuentasController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+		public CuentasController(ApplicationDbContext context)
+		{
+			_context = context;
+		}
 
-        [HttpGet]
-        public IActionResult Login()
-        {
-            return View();
-        }
-        [HttpGet]
-        public IActionResult Register()
-        {
-            return View();
-        }
+		[HttpGet]
+		public IActionResult Login()
+		{
+			return View();
+		}
 
-        [HttpPost]
-        public async Task<IActionResult> Login(string email, string password)
-        {
-            var usuario = await _context.Usuarios
-                .Include(u => u.Rol)
-                .FirstOrDefaultAsync(u => u.Email == email);
-            //verificación y rechazo
-            if (usuario == null || usuario.PasswordHash != password)
-            {
-                ViewBag.Error = "Correo o contraseña incorrectos";
-                return View();
-            }
+		[HttpGet]
+		public IActionResult Register()
+		{
+			return View(new RegisterViewModel());
+		}
 
-            if (!usuario.Activo)
-            {
-                ViewBag.Error = "Su cuenta se encuentra inactiva. Por favor, contacte con un administrador para reactivarla.";
-                return View();
-            }
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Login(string email, string password)
+		{
+			if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+			{
+				ViewBag.Error = "Debe ingresar correo y contraseña.";
+				return View();
+			}
 
-            var rolNombre = usuario.Rol?.Nombre ?? "Cliente";
+			var emailNormalizado = email.Trim().ToLower();
 
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, usuario.Email),
-                new Claim(ClaimTypes.Name, usuario.Nombre ?? usuario.Email),
-                new Claim(ClaimTypes.Email, usuario.Email),
-                new Claim(ClaimTypes.Role, rolNombre)
-            };
+			var usuario = await _context.Usuarios
+				.Include(u => u.Rol)
+				.FirstOrDefaultAsync(u => u.Email.ToLower() == emailNormalizado);
 
-            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            var principal = new ClaimsPrincipal(identity);
+			if (usuario == null || usuario.PasswordHash != password)
+			{
+				ViewBag.Error = "Correo o contraseña incorrectos.";
+				return View();
+			}
 
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+			if (!usuario.Activo)
+			{
+				ViewBag.Error = "Su cuenta se encuentra inactiva. Por favor, contacte con un administrador para reactivarla.";
+				return View();
+			}
 
-            return RedirectToAction("Index", "Home");
-        }
-        [HttpPost]
-        public async Task<IActionResult> Register(string nombre, string email, string password, string confirmPassword)
-        {
-            if (password != confirmPassword)
-            {
-                ViewBag.Error = "Las contraseñas no coinciden";
-                return View();
-            }
+			var rolNombre = usuario.Rol?.Nombre ?? "Cliente";
 
-            var existe = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == email);
+			var claims = new List<Claim>
+			{
+				new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
+				new Claim(ClaimTypes.Name, string.IsNullOrWhiteSpace(usuario.Nombre) ? usuario.Email : usuario.Nombre),
+				new Claim(ClaimTypes.Email, usuario.Email),
+				new Claim(ClaimTypes.Role, rolNombre)
+			};
 
-            if (existe != null)
-            {
-                ViewBag.Error = "Este correo ya está registrado";
-                return View();
-            }
+			var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+			var principal = new ClaimsPrincipal(identity);
 
-            var usuario = new Usuario
-            {
-                Nombre = nombre,
-                Email = email,
-                PasswordHash = password,//temporal (luego se encripta)
-                Activo = true,
-                RolId = 2 //cliente aunque podria ser un enum (propuesta de Daniel)
-            };
+			await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
-            _context.Usuarios.Add(usuario);
-            await _context.SaveChangesAsync();
+			return RedirectToAction("Index", "Home");
+		}
 
-            return RedirectToAction("Login");
-        }
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Register(RegisterViewModel model)
+		{
+			if (!ModelState.IsValid)
+			{
+				return View(model);
+			}
 
-        [HttpPost]
-        public async Task<IActionResult> Logout()
-        {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Index", "Home");
-        }
-    }
+			var nombreNormalizado = model.Nombre.Trim();
+			var emailNormalizado = model.Email.Trim().ToLower();
+
+			var existe = await _context.Usuarios
+				.AnyAsync(u => u.Email.ToLower() == emailNormalizado);
+
+			if (existe)
+			{
+				ModelState.AddModelError("Email", "Este correo ya está registrado.");
+				return View(model);
+			}
+
+			var usuario = new Usuario
+			{
+				Nombre = nombreNormalizado,
+				Email = emailNormalizado,
+				PasswordHash = model.Password,
+				Activo = true,
+				RolId = 2
+			};
+
+			_context.Usuarios.Add(usuario);
+			await _context.SaveChangesAsync();
+
+			TempData["Success"] = "Cuenta creada correctamente.";
+			return RedirectToAction("Login");
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Logout()
+		{
+			await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+			return RedirectToAction("Index", "Home");
+		}
+	}
 }
