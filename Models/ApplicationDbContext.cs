@@ -13,6 +13,7 @@ namespace ProyectoPyme.Models
 		public DbSet<Categoria> Categorias { get; set; }
 		public DbSet<Esencia> Esencias { get; set; }
 		public DbSet<Carrito> Carrito { get; set; }
+		public DbSet<Orden> Ordenes { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -24,6 +25,7 @@ namespace ProyectoPyme.Models
 			modelBuilder.Entity<Rol>().ToTable("roles");
 			modelBuilder.Entity<Usuario>().ToTable("usuarios");
 			modelBuilder.Entity<Esencia>().ToTable("esencias");
+			modelBuilder.Entity<Orden>().ToTable("Ordenes");
 
 			// =========================
 			// SEED DE ROLES

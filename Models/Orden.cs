@@ -1,9 +1,11 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace ProyectoPyme.Models
 {
     public class Orden
     {
+        [Key]
         public int IdOrden { get; set; }
         public string NumeroOrden { get; set; }
         public int UsuarioId { get; set; }

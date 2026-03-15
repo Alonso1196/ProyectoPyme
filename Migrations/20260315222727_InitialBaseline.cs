@@ -7,7 +7,7 @@
 namespace ProyectoPyme.Migrations
 {
     /// <inheritdoc />
-    public partial class SeedRoles : Migration
+    public partial class InitialBaseline : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

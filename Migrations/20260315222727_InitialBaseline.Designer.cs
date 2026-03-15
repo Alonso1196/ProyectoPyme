@@ -11,8 +11,8 @@ using ProyectoPyme.Models;
 namespace ProyectoPyme.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260315203426_SeedRoles")]
-    partial class SeedRoles
+    [Migration("20260315222727_InitialBaseline")]
+    partial class InitialBaseline
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

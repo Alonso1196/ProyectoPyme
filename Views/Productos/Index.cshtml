@@ -35,7 +35,7 @@
                 <h3 class="card-title">@p.Nombre</h3>
 
                 <div class="meta">
-                    <span class="price">₡@p.Precio</span>
+                    <span class="price">₡@p.Precio.ToString("N2")</span>
 
                     <span class="pill @(p.Disponibilidad ? "ok" : "bad")">
                         @(p.Disponibilidad ? "Disponible" : "No disponible")

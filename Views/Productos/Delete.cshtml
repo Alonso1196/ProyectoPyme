@@ -16,7 +16,7 @@
     <div class="delete-box">
         <p>Vas a eliminar:</p>
         <h3>@Model.Nombre</h3>
-        <p class="muted">Precio: ₡@Model.Precio</p>
+        <p class="muted">Precio: ₡@Model.Precio.ToString("N2")</p>
         <p class="muted">Categoría: @Model.Categoria?.Nombre</p>
 
         <form asp-action="Delete" method="post" class="actions" style="margin-top:16px;">
