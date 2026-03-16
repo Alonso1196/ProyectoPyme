@@ -1,0 +1,12 @@
+@model ProyectoPyme.Models.Orden
+
+@{
+    ViewData["Title"] = "Pago Exitoso";
+}
+
+<div class="checkout-container" style="text-align:center; padding:40px;">
+    <h2>Pago realizado con exito</h2>
+    <p>Tu orden <strong>@Model.NumeroOrden</strong> ha sido procesada.</p>
+    <p>Total: <strong>$@Model.Total.ToString("F2")</strong></p>
+    <a asp-controller="Home" asp-action="Index" class="btn primary">Volver al inicio</a>
+</div>

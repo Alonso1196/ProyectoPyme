@@ -1,0 +1,11 @@
+@model ProyectoPyme.Models.Orden
+
+@{
+    ViewData["Title"] = "Pago Cancelado";
+}
+
+<div class="checkout-container" style="text-align:center; padding:40px;">
+    <h2>Pago cancelado</h2>
+    <p>La orden <strong>@Model.NumeroOrden</strong> no fue procesada.</p>
+    <a asp-controller="Carrito" asp-action="Index" class="btn secondary">Volver al carrito</a>
+</div>
