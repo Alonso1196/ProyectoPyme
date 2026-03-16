@@ -1,0 +1,30 @@
+@{
+    ViewData["Title"] = ViewBag.Titulo ?? "Error";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="error-page">
+
+    <div class="error-container">
+
+        <h1 class="error-code">@ViewBag.Codigo</h1>
+
+        <h2 class="error-title">@ViewBag.Titulo</h2>
+
+        <p class="error-message">@ViewBag.Mensaje</p>
+
+        @if (ViewBag.RequestId != null)
+        {
+            <p class="error-request-id">
+                <small>ID de solicitud: @ViewBag.RequestId</small>
+            </p>
+        }
+
+        <div class="error-actions">
+            <a href="/" class="btn primary">Volver al inicio</a>
+            <a href="/Productos" class="btn secondary">Ver productos</a>
+        </div>
+
+    </div>
+
+</div>

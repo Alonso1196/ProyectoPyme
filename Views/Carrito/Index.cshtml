@@ -4,7 +4,7 @@
     ViewData["Title"] = "Mi Carrito";
 }
 
-<h2 class="cart-title">🛒 Mi Carrito</h2>
+<h2 class="cart-title">Mi Carrito</h2>
 
 @if (!Model.Any())
 {
@@ -30,7 +30,7 @@ else
 
                     <h3>@item.Producto.Nombre</h3>
 
-                    <p class="price">₡@item.Producto.Precio</p>
+                    <p class="price">₡@item.Producto.Precio.ToString("N2")</p>
 
                     <div class="quantity">
 
@@ -51,7 +51,7 @@ else
                 <div class="cart-total">
 
                     <p class="subtotal">
-                        ₡@(item.Producto.Precio* item.Cantidad)
+                        ₡@((item.Producto.Precio * item.Cantidad).ToString("N2"))
                     </p>
 
                     <a asp-action="Eliminar"
@@ -71,7 +71,7 @@ else
 
         <h3>
             Total:
-            ₡@Model.Sum(x => x.Producto.Precio * x.Cantidad)
+            ₡@Model.Sum(x => x.Producto.Precio * x.Cantidad).ToString("N2")
         </h3>
 
         <a asp-controller="Orden" asp-action="Checkout" class="btn primary">

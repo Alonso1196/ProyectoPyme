@@ -32,20 +32,19 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// Pipeline
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
-}
+// Manejo de Errores (equivalente a Global.asax / Application_Error)
+// Captura excepciones no controladas (500) - equivale a Application_Error + Server.ClearError() + Response.Clear()
+app.UseExceptionHandler("/Error");
+// Captura codigos de estado HTTP sin cuerpo (404, 403, etc.) - equivale a verificar HttpException.GetHttpCode()
+app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
+app.UseHsts();
 app.UseHttpsRedirection();
-app.UseStaticFiles();          // ✅ wwwroot (CSS/imagenes)
+app.UseStaticFiles();
 
 app.UseRouting();
 
-
-app.UseAuthentication();       // ✅ necesario para login
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
