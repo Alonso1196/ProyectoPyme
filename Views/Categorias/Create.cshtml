@@ -1,10 +1,10 @@
 @model ProyectoPyme.Models.Categoria
-@{ ViewData["Title"] = "Nueva Categoría."; Layout = "~/Views/Shared/_AdminLayout.cshtml"; }
+@{ ViewData["Title"] = "Nueva Categoría"; Layout = "~/Views/Shared/_AdminLayout.cshtml"; }
 
 <div class="page-header">
     <div>
-        <h2><i class="fa-solid fa-plus" style="color:var(--amber-light);"></i> Nueva Categoría.</h2>
-        <p class="muted">Agrega una nueva categoría al catálogo.</p>
+        <h2><i class="fa-solid fa-plus" style="color:var(--amber-light);"></i> Nueva Categoría</h2>
+        <p class="muted">Agrega una nueva categoría al catálogo</p>
     </div>
     <a href="/Categorias" class="btn ghost"><i class="fa-solid fa-arrow-left"></i> Volver</a>
 </div>
@@ -12,12 +12,12 @@
 <form method="post" class="form-card">
     <div class="field">
         <label asp-for="Nombre"></label>
-        <input asp-for="Nombre" class="input" placeholder="Ej. Fragancias Orientales." />
+        <input asp-for="Nombre" class="input" placeholder="Ej. Fragancias Orientales" />
         <span asp-validation-for="Nombre" class="error"></span>
     </div>
     <div class="field">
-        <label asp-for="Descripcion."></label>
-        <textarea asp-for="Descripcion." class="input" placeholder="Descripción de la categoría..."></textarea>
+        <label asp-for="Descripcion"></label>
+        <textarea asp-for="Descripcion" class="input" placeholder="Descripción de la categoría..."></textarea>
         <span asp-validation-for="Descripcion" class="error"></span>
     </div>
     <div class="actions">
