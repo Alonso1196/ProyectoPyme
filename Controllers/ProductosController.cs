@@ -114,7 +114,6 @@ namespace ProyectoPyme.Controllers
 
 					var rutaViejaFisica = Path.Combine(
 						Directory.GetCurrentDirectory(),
-						"wwwroot",
 						rutaViejaRelativa
 					);
 
@@ -169,7 +168,6 @@ namespace ProyectoPyme.Controllers
 
 				var rutaFisica = Path.Combine(
 					Directory.GetCurrentDirectory(),
-					"wwwroot",
 					rutaRelativa
 				);
 
@@ -233,7 +231,7 @@ namespace ProyectoPyme.Controllers
 
 		private async Task<string> GuardarImagenAsync(IFormFile imagen)
 		{
-			var carpeta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "Productos");
+			var carpeta = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", "Productos");
 			Directory.CreateDirectory(carpeta);
 
 			var extension = Path.GetExtension(imagen.FileName).ToLowerInvariant();
@@ -245,7 +243,7 @@ namespace ProyectoPyme.Controllers
 				await imagen.CopyToAsync(stream);
 			}
 
-			return $"/images/Productos/{nombreArchivo}";
+			return $"/uploads/Productos/{nombreArchivo}";
 		}
 	}
 }

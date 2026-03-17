@@ -41,6 +41,15 @@ app.UseHsts();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+// Servir imágenes desde Uploads (fuera de wwwroot) para evitar que Hot Reload reinicie la app
+var uploadsPath = Path.Combine(app.Environment.ContentRootPath, "Uploads");
+Directory.CreateDirectory(uploadsPath);
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(uploadsPath),
+    RequestPath = "/uploads"
+});
+
 app.UseRouting();
 
 app.UseAuthentication();
