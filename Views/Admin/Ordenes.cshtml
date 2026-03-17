@@ -11,9 +11,9 @@
             <tbody>
                 @foreach (var orden in Model)
                 {
-                    var estadoClase = orden.Estado.ToLower() == "pendiente" ? "pendiente" :
-                        orden.Estado.ToLower() == "pagado" ? "pagado" :
-                        orden.Estado.ToLower() == "cancelado" ? "cancelado" : "otro";
+                    var estadoClase = orden.Estado.ToLower() == "Pendiente" ? "Pendiente" :
+                        orden.Estado.ToLower() == "Pagado" ? "Pagado" :
+                        orden.Estado.ToLower() == "Cancelado" ? "Cancelado" : "Otro";
                     <tr>
                         <td>@orden.IdOrden</td>
                         <td style="color:var(--text);">@orden.NumeroOrden</td>
@@ -23,7 +23,7 @@
                         <td><span class="orden-badge @estadoClase">@orden.Estado</span></td>
                         <td>
                             <a asp-controller="Admin" asp-action="DetalleOrden" asp-route-idOrden="@orden.IdOrden" class="action-btn view" title="Ver detalle"><i class="fa-solid fa-eye"></i></a>
-                            @if (orden.Estado.ToLower() == "pendiente")
+                            @if (orden.Estado.ToLower() == "Pendiente")
                             {
                                 <form asp-controller="Admin" asp-action="ActualizarEstado" method="post" style="display:inline-flex;align-items:center;gap:6px;">
                                     <input type="hidden" name="idOrden" value="@orden.IdOrden" />
