@@ -1,85 +1,63 @@
-﻿@model ProyectoPyme.Models.Productos
-
-@{
-    ViewData["Title"] = "Crear producto";
-}
+@model ProyectoPyme.Models.Productos
+@{ ViewData["Title"] = "Crear producto"; Layout = "~/Views/Shared/_AdminLayout.cshtml"; }
 
 <div class="page-header">
     <div>
-        <h2>Crear producto</h2>
+        <h2><i class="fa-solid fa-plus" style="color:var(--blue-light);"></i> Crear producto</h2>
         <p class="muted">Agrega un nuevo producto al catálogo</p>
     </div>
-    <a href="/Productos" class="btn ghost">Volver</a>
+    <a href="/Productos" class="btn ghost"><i class="fa-solid fa-arrow-left"></i> Volver</a>
 </div>
 
 @if (!ViewData.ModelState.IsValid)
 {
-    <div class="alert">
-        Revisa los campos del formulario.
-    </div>
+    <div class="alert">Revisa los campos del formulario.</div>
 }
 
 <form asp-action="Create" method="post" enctype="multipart/form-data" class="form-card">
     <div asp-validation-summary="ModelOnly" class="error"></div>
-
     <div class="form-grid">
         <div class="field">
             <label asp-for="Nombre"></label>
-            <input asp-for="Nombre" class="input" />
+            <input asp-for="Nombre" class="input" placeholder="Ej. Armani Code" />
             <span asp-validation-for="Nombre" class="error"></span>
         </div>
-
         <div class="field">
             <label asp-for="Precio"></label>
-            <input asp-for="Precio" class="input" type="number" step="0.01" min="0.01" />
+            <input asp-for="Precio" class="input" type="number" step="0.01" min="0.01" placeholder="0" />
             <span asp-validation-for="Precio" class="error"></span>
         </div>
-
         <div class="field">
             <label asp-for="Stock"></label>
-            <input asp-for="Stock" class="input" type="number" min="0" />
+            <input asp-for="Stock" class="input" type="number" min="0" placeholder="0" />
             <span asp-validation-for="Stock" class="error"></span>
         </div>
-
         <div class="field">
             <label asp-for="CategoriaId">Categoría</label>
-            <select asp-for="CategoriaId" class="input" asp-items="ViewBag.Categorias">
-                <option value="">-- Seleccione una categoría --</option>
-            </select>
+            <select asp-for="CategoriaId" class="input" asp-items="ViewBag.Categorias"><option value="">-- Seleccione --</option></select>
             <span asp-validation-for="CategoriaId" class="error"></span>
         </div>
-
         <div class="field">
             <label asp-for="EsenciaId">Esencia</label>
-            <select asp-for="EsenciaId" class="input" asp-items="ViewBag.Esencias">
-                <option value="">-- Seleccione una esencia --</option>
-            </select>
+            <select asp-for="EsenciaId" class="input" asp-items="ViewBag.Esencias"><option value="">-- Seleccione --</option></select>
             <span asp-validation-for="EsenciaId" class="error"></span>
         </div>
-
         <div class="field">
             <label asp-for="Disponibilidad"></label>
-            <select asp-for="Disponibilidad" class="input">
-                <option value="true">Sí</option>
-                <option value="false">No</option>
-            </select>
+            <select asp-for="Disponibilidad" class="input"><option value="true">Sí</option><option value="false">No</option></select>
             <span asp-validation-for="Disponibilidad" class="error"></span>
         </div>
-
         <div class="field full">
-            <label>Imagen</label>
+            <label>Imagen del perfume</label>
             <input type="file" name="Imagen" class="input" accept=".jpg,.jpeg,.png,.webp" />
             <p class="muted small">Formatos permitidos: JPG, JPEG, PNG, WEBP. Máximo 2 MB.</p>
             <span asp-validation-for="RutaImagen" class="error"></span>
         </div>
     </div>
-
     <div class="actions">
-        <button type="submit" class="btn primary">Guardar</button>
+        <button type="submit" class="btn primary"><i class="fa-solid fa-floppy-disk"></i> Guardar</button>
         <a href="/Productos" class="btn ghost">Cancelar</a>
     </div>
 </form>
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

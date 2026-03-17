@@ -1,87 +1,67 @@
-﻿@model ProyectoPyme.Models.Productos
+@model ProyectoPyme.Models.Productos
+@{ ViewData["Title"] = "Editar producto"; Layout = "~/Views/Shared/_AdminLayout.cshtml"; }
 
-@{
-    ViewData["Title"] = "Editar producto";
-}
-
-<h2>Editar producto</h2>
+<div class="page-header">
+    <div>
+        <h2><i class="fa-solid fa-pen" style="color:var(--amber-light);"></i> Editar producto</h2>
+        <p class="muted">Modifica los datos del perfume</p>
+    </div>
+    <a href="/Productos" class="btn ghost"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+</div>
 
 <div asp-validation-summary="ModelOnly" class="error"></div>
 
 <form asp-action="Edit" asp-route-id="@Model.ProductoId" method="post" enctype="multipart/form-data" class="form-card">
     @Html.AntiForgeryToken()
-
     <input type="hidden" asp-for="ProductoId" />
     <input type="hidden" asp-for="RutaImagen" />
-
     <div class="form-grid">
         <div class="field">
             <label asp-for="Nombre"></label>
             <input asp-for="Nombre" class="input" />
             <span asp-validation-for="Nombre" class="error"></span>
         </div>
-
         <div class="field">
             <label asp-for="Precio"></label>
             <input asp-for="Precio" class="input" type="number" step="0.01" min="0.01" />
             <span asp-validation-for="Precio" class="error"></span>
         </div>
-
         <div class="field">
             <label asp-for="Stock"></label>
             <input asp-for="Stock" class="input" type="number" min="0" />
             <span asp-validation-for="Stock" class="error"></span>
         </div>
-
         <div class="field">
             <label asp-for="CategoriaId">Categoría</label>
-            <select asp-for="CategoriaId" class="input" asp-items="ViewBag.Categorias">
-                <option value="">-- Seleccione una categoría --</option>
-            </select>
+            <select asp-for="CategoriaId" class="input" asp-items="ViewBag.Categorias"><option value="">-- Seleccione --</option></select>
             <span asp-validation-for="CategoriaId" class="error"></span>
         </div>
-
         <div class="field">
             <label asp-for="EsenciaId">Esencia</label>
-            <select asp-for="EsenciaId" class="input" asp-items="ViewBag.Esencias">
-                <option value="">-- Seleccione una esencia --</option>
-            </select>
+            <select asp-for="EsenciaId" class="input" asp-items="ViewBag.Esencias"><option value="">-- Seleccione --</option></select>
             <span asp-validation-for="EsenciaId" class="error"></span>
         </div>
-
         <div class="field">
             <label asp-for="Disponibilidad"></label>
-            <select asp-for="Disponibilidad" class="input">
-                <option value="true">Sí</option>
-                <option value="false">No</option>
-            </select>
+            <select asp-for="Disponibilidad" class="input"><option value="true">Sí</option><option value="false">No</option></select>
             <span asp-validation-for="Disponibilidad" class="error"></span>
         </div>
-
         <div class="field full">
             <label>Imagen actual</label>
             @if (!string.IsNullOrEmpty(Model.RutaImagen))
-            {
-                <img src="@Model.RutaImagen" alt="@Model.Nombre" class="product-img preview" />
-            }
+            { <img src="@Model.RutaImagen" alt="@Model.Nombre" class="product-img preview" /> }
             else
-            {
-                <div class="img-placeholder preview">Sin imagen</div>
-            }
-
-            <label style="margin-top:10px;">Cambiar imagen (opcional)</label>
+            { <div class="img-placeholder preview">Sin imagen</div> }
+            <label style="margin-top:12px;">Cambiar imagen (opcional)</label>
             <input type="file" name="Imagen" class="input" accept=".jpg,.jpeg,.png,.webp" />
             <p class="muted small">Formatos permitidos: JPG, JPEG, PNG, WEBP. Máximo 2 MB.</p>
             <span asp-validation-for="RutaImagen" class="error"></span>
         </div>
     </div>
-
-    <div class="actions" style="margin-top:14px;">
-        <button type="submit" class="btn primary">Guardar</button>
+    <div class="actions" style="margin-top:16px;">
+        <button type="submit" class="btn primary"><i class="fa-solid fa-floppy-disk"></i> Guardar</button>
         <a href="/Productos" class="btn ghost">Cancelar</a>
     </div>
 </form>
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

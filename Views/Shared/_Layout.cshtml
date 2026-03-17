@@ -4,94 +4,63 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ProyectoPyme</title>
-
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-    <!-- Iconos -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
-
 <body>
-
-    <!-- NAVBAR -->
     <header class="navbar">
         <div class="navbar-container">
-
             <div class="navbar-left">
-
                 <a href="/" class="logo">
-                    <img src="@Url.Content("~/images/Productos/TH.png")" alt="Perfumería Thompson" class="logo-img">
-                    
+                    <img src="@Url.Content("~/images/Productos/Elegant Perfume Shop Logo with Gold Accents.jpg")" alt="Perfumería Thompson" class="logo-img">
                 </a>
-
                 <nav class="nav-links">
                     <a href="/Home/Index"><i class="fa-solid fa-house"></i> Inicio</a>
-                    <a href="/Productos"><i class="fa-solid fa-box"></i> Productos</a>
+                    <a href="/Productos"><i class="fa-solid fa-droplet"></i> Productos</a>
                     <a href="/Categorias"><i class="fa-solid fa-layer-group"></i> Categorías</a>
-
                     @if (User.IsInRole("Admin"))
                     {
-                        <a href="/Productos/Create" class="admin-link">
-                            <i class="fa-solid fa-plus"></i> Nuevo Producto
-                        </a>
+                        <a href="/Productos/Create" class="admin-link"><i class="fa-solid fa-plus"></i> Nuevo Producto</a>
                         <li class="nav-item">
                             <a class="nav-link" href="@Url.Action("Ordenes", "Admin")">Órdenes de Clientes</a>
                         </li>
                     }
+                    @if (User.Identity != null && User.Identity.IsAuthenticated && !User.IsInRole("Admin"))
+                    {
+                        <a href="/Carrito"><i class="fa-solid fa-cart-shopping"></i> Carrito</a>
+                    }
                 </nav>
-
             </div>
-
             <div class="navbar-right">
-
                 @if (User.Identity != null && User.Identity.IsAuthenticated)
                 {
                     <span class="user-info">
-                        <i class="fa-solid fa-user"></i>
-                        Hola, <strong>@User.Identity.Name</strong>
-
+                        <i class="fa-solid fa-user"></i> Hola, <strong>@User.Identity.Name</strong>
                         @if (User.IsInRole("Admin"))
                         {
-                            <span class="badge admin">Admin</span>
+                            <span class="badge admin"><i class="fa-solid fa-shield-halved"></i> Admin</span>
                         }
-                        else if (User.IsInRole("Cliente"))
+                        else
                         {
-                            <span class="badge cliente">Cliente</span>
+                            <span class="badge cliente"><i class="fa-solid fa-user"></i> Cliente</span>
                         }
                     </span>
-
-                    <form method="post" action="/Cuentas/Logout">
-                        <button type="submit" class="btn logout">
-                            <i class="fa-solid fa-right-from-bracket"></i> Salir
-                        </button>
+                    <form asp-controller="Cuentas" asp-action="Logout" method="post">
+                        <button type="submit" class="btn logout"><i class="fa-solid fa-right-from-bracket"></i> Salir</button>
                     </form>
                 }
                 else
                 {
-                    <a href="/Cuentas/Login" class="btn login">
-                        <i class="fa-solid fa-right-to-bracket"></i> Iniciar sesión
-                    </a>
-                    <a asp-controller="Cuentas" asp-action="Register" class="btn login">
-                        Registrarse
-                    </a>
+                    <a href="/Cuentas/Login" class="btn login"><i class="fa-solid fa-right-to-bracket"></i> Iniciar sesión</a>
+                    <a asp-controller="Cuentas" asp-action="Register" class="btn ghost">Registrarse</a>
                 }
-
             </div>
-
         </div>
     </header>
-
-    <!-- CONTENIDO -->
     <main class="main-container">
         @RenderBody()
     </main>
-
-
-
     @await RenderSectionAsync("Scripts", required: false)
-
 </body>
 </html>

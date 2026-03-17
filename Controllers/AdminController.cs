@@ -1,14 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ProyectoPyme.Models;
 using MySql.Data.MySqlClient;
-using System.Collections.Generic;
 using ProyectoPyme.Models;
 
 namespace ProyectoPyme.Controllers
 {
     public class AdminController : Controller
     {
-        string conexion = "server=localhost;port=3306;database=proyectopyme_db;user=root;password=1122;";
+        private readonly string conexion;
+
+        public AdminController(IConfiguration configuration)
+        {
+            conexion = configuration.GetConnectionString("DefaultConnection");
+        }
 
         // Lista de órdenes
         public IActionResult Ordenes()

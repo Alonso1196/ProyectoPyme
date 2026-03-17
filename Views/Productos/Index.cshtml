@@ -1,92 +1,100 @@
-﻿@model IEnumerable<ProyectoPyme.Models.Productos>
+@model IEnumerable<ProyectoPyme.Models.Productos>
+@{ ViewData["Title"] = "Productos"; }
 
-@{
-    ViewData["Title"] = "Productos";
-}
-
-<div class="page-header">
-    <div>
-        <h2>Productos</h2>
-        <p class="muted">Disponibilidad de artículos</p>
+@if (User.IsInRole("Admin"))
+{
+    <div class="page-header">
+        <div>
+            <h2><i class="fa-solid fa-droplet" style="color:var(--blue-light);"></i> Perfumes</h2>
+            <p class="muted">Catálogo de fragancias y perfumes de lujo</p>
+        </div>
+        <a href="/Productos/Create" class="btn primary"><i class="fa-solid fa-plus"></i> Nuevo perfume</a>
     </div>
-
-    @if (User.IsInRole("Admin"))
-    {
-        <a href="/Productos/Create" class="btn primary">+ Nuevo producto</a>
-    }
-</div>
-
-<div class="card-grid">
-    @foreach (var p in Model)
-    {
-        <div class="card">
-
-            @if (!string.IsNullOrEmpty(p.RutaImagen))
-            {
-                <img src="@p.RutaImagen" alt="@p.Nombre" class="product-img" />
-            }
-            else
-            {
-                <div class="img-placeholder">Sin imagen</div>
-            }
-
-            <div class="card-body">
-
-                <h3 class="card-title">@p.Nombre</h3>
-
-                <div class="meta">
-                    <span class="price">₡@p.Precio.ToString("N2")</span>
-
-                    <span class="pill @(p.Disponibilidad ? "ok" : "bad")">
-                        @(p.Disponibilidad ? "Disponible" : "No disponible")
-                    </span>
-                </div>
-
-                <p class="muted">Categoría: <strong>@p.Categoria?.Nombre</strong></p>
-                <p class="muted">Esencia: <strong>@p.Esencia?.Nombre</strong></p>
-
-                <div class="actions">
-
-                    @* ADMIN *@
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <a href="/Productos/Edit/@p.ProductoId" class="btn ghost">Editar</a>
-                        <a href="/Productos/Delete/@p.ProductoId" class="btn danger">Eliminar</a>
-                    }
-
-                    @* USUARIO LOGUEADO *@
-                    else if (User.Identity.IsAuthenticated)
+    <div class="admin-table-wrap">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>ID</th><th>Nombre</th><th>Categoría</th><th>Esencia</th><th>Precio</th>
+                    <th style="text-align:center;">Disponibilidad</th><th style="text-align:right;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in Model)
+                {
+                    <tr>
+                        <td>@p.ProductoId</td>
+                        <td class="text-white">@p.Nombre</td>
+                        <td><span class="u-category" style="display:inline-block;">@p.Categoria?.Nombre</span></td>
+                        <td>@p.Esencia?.Nombre</td>
+                        <td class="text-amber">₡@p.Precio.ToString("N2")</td>
+                        <td style="text-align:center;">
+                            @if (p.Disponibilidad)
+                            {
+                                <span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--green);"><i class="fa-solid fa-check" style="color:#fff;font-size:12px;"></i></span>
+                            }
+                            else
+                            {
+                                <span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--red);"><i class="fa-solid fa-xmark" style="color:#fff;font-size:12px;"></i></span>
+                            }
+                        </td>
+                        <td>
+                            <div class="action-btns">
+                                <a href="/Productos/Edit/@p.ProductoId" class="action-btn edit" title="Editar"><i class="fa-solid fa-pen"></i></a>
+                                <a href="/Productos/Delete/@p.ProductoId" class="action-btn delete" title="Eliminar"><i class="fa-solid fa-trash"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="page-header">
+        <div>
+            <h2><i class="fa-solid fa-droplet" style="color:var(--blue-light);"></i> Perfumes</h2>
+            <p class="muted">Catálogo de fragancias y perfumes de lujo</p>
+        </div>
+    </div>
+    <div class="user-product-cards">
+        @foreach (var p in Model)
+        {
+            <div class="u-product-card">
+                @if (!string.IsNullOrEmpty(p.RutaImagen))
+                { <img src="@p.RutaImagen" alt="@p.Nombre" class="u-img" /> }
+                else
+                { <div class="u-img-placeholder"><i class="fa-solid fa-droplet" style="font-size:40px;opacity:.3;"></i></div> }
+                <div class="u-body">
+                    <h3 class="u-name">@p.Nombre</h3>
+                    <span class="u-category">@p.Categoria?.Nombre</span>
+                    <p class="u-esencia"><strong>Esencia:</strong> @p.Esencia?.Nombre</p>
+                    <div class="u-price-row">
+                        <span class="u-price">₡@p.Precio.ToString("N2")</span>
+                        <span class="u-availability">
+                            @if (p.Disponibilidad)
+                            { <span class="u-dot ok"></span><span class="u-avail-ok">Disponible</span> }
+                            else
+                            { <span class="u-dot bad"></span><span class="u-avail-bad">Agotado</span> }
+                        </span>
+                    </div>
+                    @if (User.Identity.IsAuthenticated)
                     {
                         if (p.Disponibilidad)
                         {
-                            <a asp-controller="Carrito"
-                               asp-action="Agregar"
-                               asp-route-id="@p.ProductoId"
-                               class="btn primary">
+                            <a asp-controller="Carrito" asp-action="Agregar" asp-route-id="@p.ProductoId" class="btn primary" style="width:100%;justify-content:center;">
                                 <i class="fa-solid fa-cart-shopping"></i> Agregar al carrito
                             </a>
                         }
                         else
-                        {
-                            <button class="btn ghost" disabled>
-                                No disponible
-                            </button>
-                        }
+                        { <button class="btn ghost" disabled style="width:100%;justify-content:center;opacity:.5;">No disponible</button> }
                     }
-
-                    @* VISITANTE *@
                     else
                     {
-                        <a asp-controller="Cuentas"
-                           asp-action="Login"
-                           class="btn ghost">
-                            Iniciar sesión para comprar
-                        </a>
+                        <a asp-controller="Cuentas" asp-action="Login" class="btn ghost" style="width:100%;justify-content:center;">Iniciar sesión para comprar</a>
                     }
-
                 </div>
-
             </div>
-        </div>
-    }
-</div>
+        }
+    </div>
+}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin · ProyectoPyme</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <a href="/" class="sidebar-logo">
+                <img src="@Url.Content("~/images/Productos/Elegant Perfume Shop Logo with Gold Accents.jpg")" alt="ProyectoPyme">
+                <span>ProyectoPyme</span>
+            </a>
+            <div class="sidebar-label">Gestión</div>
+            <a href="/Home/Index" class="sidebar-link">
+                <i class="fa-solid fa-gauge"></i><span>Panel</span>
+            </a>
+            <a href="/Productos" class="sidebar-link @(ViewData["Title"]?.ToString()?.Contains("roducto") == true ? "active" : "")">
+                <i class="fa-solid fa-droplet"></i><span>Perfumes</span>
+            </a>
+            <a href="/Categorias" class="sidebar-link @(ViewData["Title"]?.ToString()?.Contains("ategoría") == true ? "active-amber" : "")">
+                <i class="fa-solid fa-layer-group"></i><span>Categorías</span>
+            </a>
+            <a href="@Url.Action("Ordenes", "Admin")" class="sidebar-link @(ViewData["Title"]?.ToString()?.Contains("rden") == true ? "active" : "")">
+                <i class="fa-solid fa-receipt"></i><span>Órdenes</span>
+            </a>
+            <div class="sidebar-spacer"></div>
+            <form asp-controller="Cuentas" asp-action="Logout" method="post" style="margin:0;">
+                <button type="submit" class="sidebar-link logout" style="width:100%;border:none;background:none;cursor:pointer;font:inherit;">
+                    <i class="fa-solid fa-right-from-bracket"></i><span>Cerrar sesión</span>
+                </button>
+            </form>
+        </aside>
+        <div class="admin-body">
+            <header class="admin-topbar">
+                <div class="admin-badge">
+                    <i class="fa-solid fa-shield-halved"></i> Modo Administrador
+                </div>
+                <div class="admin-user">
+                    <span>@User.Identity?.Name</span>
+                    <span class="badge admin"><i class="fa-solid fa-shield-halved"></i> Admin</span>
+                    <div class="avatar">Ad</div>
+                </div>
+            </header>
+            <div class="admin-content">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

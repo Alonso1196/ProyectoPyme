@@ -1,32 +1,50 @@
-﻿@model IEnumerable<ProyectoPyme.Models.Categoria>
+@model IEnumerable<ProyectoPyme.Models.Categoria>
+@{ ViewData["Title"] = "Categorías"; }
 
-@{
-    ViewData["Title"] = "Categorías";
-}
-
-<h2 class="page-title">Categorías</h2>
-
-<div class="top-actions">
-    @if (User.IsInRole("Admin"))
-    {
-        <a href="/Categorias/Create" class="btn primary">Nueva Categoría</a>
-    }
-</div>
-
-<div class="card-grid">
-    @foreach (var c in Model)
-    {
-        <div class="card">
-            <h3>@c.Nombre</h3>
-            <p class="muted">@c.Descripcion</p>
-
-            @if (User.IsInRole("Admin"))
-            {
-                <div class="actions">
-                    <a href="/Categorias/Edit/@c.CategoriaId" class="btn ghost">Editar</a>
-                    <a href="/Categorias/Delete/@c.CategoriaId" class="btn danger">Eliminar</a>
-                </div>
-            }
+@if (User.IsInRole("Admin"))
+{
+    <div class="page-header">
+        <div>
+            <h2><i class="fa-solid fa-layer-group" style="color:var(--amber-light);"></i> Categorías de Perfumes</h2>
+            <p class="muted">Organiza tus perfumes por categorías y familias olfativas</p>
         </div>
-    }
-</div>
+        <a href="/Categorias/Create" class="btn primary amber"><i class="fa-solid fa-plus"></i> Nueva categoría</a>
+    </div>
+    <div class="admin-table-wrap">
+        <table class="admin-table">
+            <thead>
+                <tr><th>ID</th><th>Nombre</th><th>Descripción</th><th style="text-align:right;">Acciones</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var c in Model)
+                {
+                    <tr>
+                        <td>@c.CategoriaId</td>
+                        <td class="text-white">@c.Nombre</td>
+                        <td>@c.Descripcion</td>
+                        <td>
+                            <div class="action-btns">
+                                <a href="/Categorias/Edit/@c.CategoriaId" class="action-btn edit" title="Editar"><i class="fa-solid fa-pen"></i></a>
+                                <a href="/Categorias/Delete/@c.CategoriaId" class="action-btn delete" title="Eliminar"><i class="fa-solid fa-trash"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <h2 class="page-title"><i class="fa-solid fa-layer-group" style="color:var(--amber-light);"></i> Categorías</h2>
+    <div class="user-cat-cards">
+        @foreach (var c in Model)
+        {
+            <div class="u-cat-card">
+                <div class="u-cat-icon"><i class="fa-solid fa-layer-group"></i></div>
+                <h3>@c.Nombre</h3>
+                <p>@c.Descripcion</p>
+            </div>
+        }
+    </div>
+}

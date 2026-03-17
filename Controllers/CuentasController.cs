@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -57,7 +57,8 @@ namespace ProyectoPyme.Controllers
 				return View();
 			}
 
-			var rolNombre = usuario.Rol?.Nombre ?? "Cliente";
+			var rolNombre = usuario.Rol?.Nombre
+				?? (usuario.RolId == 1 ? "Admin" : "Cliente");
 
 			var claims = new List<Claim>
 			{

@@ -1,27 +1,22 @@
-﻿@model ProyectoPyme.Models.Productos
-
-@{
-    ViewData["Title"] = "Eliminar producto";
-}
+@model ProyectoPyme.Models.Productos
+@{ ViewData["Title"] = "Eliminar producto"; Layout = "~/Views/Shared/_AdminLayout.cshtml"; }
 
 <div class="page-header">
     <div>
-        <h2>Eliminar producto</h2>
+        <h2><i class="fa-solid fa-trash" style="color:#f87171;"></i> Eliminar producto</h2>
         <p class="muted">Esta acción no se puede deshacer</p>
     </div>
-    <a href="/Productos" class="btn ghost">Volver</a>
+    <a href="/Productos" class="btn ghost"><i class="fa-solid fa-arrow-left"></i> Volver</a>
 </div>
-
 <div class="form-card">
     <div class="delete-box">
-        <p>Vas a eliminar:</p>
+        <p style="color:var(--text-sec);">Vas a eliminar:</p>
         <h3>@Model.Nombre</h3>
-        <p class="muted">Precio: ₡@Model.Precio.ToString("N2")</p>
+        <p class="muted">Precio: <strong style="color:var(--amber-light);">₡@Model.Precio.ToString("N2")</strong></p>
         <p class="muted">Categoría: @Model.Categoria?.Nombre</p>
-
-        <form asp-action="Delete" method="post" class="actions" style="margin-top:16px;">
+        <form asp-action="Delete" method="post" class="actions" style="margin-top:20px;">
             <input type="hidden" asp-for="ProductoId" />
-            <button type="submit" class="btn danger">Sí, eliminar</button>
+            <button type="submit" class="btn danger"><i class="fa-solid fa-trash"></i> Sí, eliminar</button>
             <a href="/Productos" class="btn ghost">Cancelar</a>
         </form>
     </div>

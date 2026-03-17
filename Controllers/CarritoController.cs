@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProyectoPyme.Models;
+using System.Security.Claims;
 
 public class CarritoController : Controller
 {
@@ -13,7 +14,7 @@ public class CarritoController : Controller
 
     public IActionResult Agregar(int id)
     {
-        int usuarioId = 1;
+        int usuarioId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
         var item = _context.Carrito
             .FirstOrDefault(c => c.UsuarioId == usuarioId && c.IdProducto == id);
@@ -40,7 +41,7 @@ public class CarritoController : Controller
     }
     public IActionResult Index()
     {
-        int usuarioId = 1; // temporal
+        int usuarioId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
         var carrito = _context.Carrito
             .Include(c => c.Producto)

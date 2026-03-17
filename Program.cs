@@ -33,9 +33,8 @@ builder.Services.AddControllersWithViews();
 var app = builder.Build();
 
 // Manejo de Errores (equivalente a Global.asax / Application_Error)
-// Captura excepciones no controladas (500) - equivale a Application_Error + Server.ClearError() + Response.Clear()
 app.UseExceptionHandler("/Error");
-// Captura codigos de estado HTTP sin cuerpo (404, 403, etc.) - equivale a verificar HttpException.GetHttpCode()
+// Captura codigos de estado HTTP sin cuerpo (404, 403, etc.)
 app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
 app.UseHsts();

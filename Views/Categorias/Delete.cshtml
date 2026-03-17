@@ -1,14 +1,21 @@
-﻿@model ProyectoPyme.Models.Categoria
+@model ProyectoPyme.Models.Categoria
+@{ ViewData["Title"] = "Eliminar Categoría"; Layout = "~/Views/Shared/_AdminLayout.cshtml"; }
 
-<h2>Eliminar Categoría</h2>
-
-<p>
-    ¿Está seguro que desea eliminar la categoría
-    <strong>@Model.Nombre</strong>?
-</p>
-
-<form method="post">
-    <input type="hidden" asp-for="CategoriaId" />
-    <button type="submit">Eliminar</button>
-    <a asp-action="Index">Cancelar</a>
-</form>
+<div class="page-header">
+    <div>
+        <h2><i class="fa-solid fa-trash" style="color:#f87171;"></i> Eliminar Categoría</h2>
+        <p class="muted">Esta acción no se puede deshacer</p>
+    </div>
+    <a href="/Categorias" class="btn ghost"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+</div>
+<div class="form-card">
+    <div class="delete-box">
+        <p style="color:var(--text-sec);">¿Está seguro que desea eliminar la categoría?</p>
+        <h3>@Model.Nombre</h3>
+        <form method="post" class="actions" style="margin-top:20px;">
+            <input type="hidden" asp-for="CategoriaId" />
+            <button type="submit" class="btn danger"><i class="fa-solid fa-trash"></i> Sí, eliminar</button>
+            <a asp-action="Index" class="btn ghost">Cancelar</a>
+        </form>
+    </div>
+</div>

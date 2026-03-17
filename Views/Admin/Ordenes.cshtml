@@ -1,61 +1,45 @@
-﻿@model List<ProyectoPyme.Models.Orden>
+@model List<ProyectoPyme.Models.Orden>
+@{ ViewData["Title"] = "Órdenes de Clientes"; Layout = "~/Views/Shared/_AdminLayout.cshtml"; }
 
 <div class="ordenes-container">
-    <h2>Órdenes de Clientes</h2>
-
-    <table class="ordenes-table">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Número Orden</th>
-                <th>Cliente</th>
-                <th>Fecha</th>
-                <th>Total</th>
-                <th>Estado</th>
-                <th>Acción</th> <!-- Nueva columna -->
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var orden in Model)
-            {
-                var estadoClase =
-                orden.Estado.ToLower() == "pendiente" ? "pendiente" :
-                orden.Estado.ToLower() == "pagado" ? "pagado" :
-                orden.Estado.ToLower() == "cancelado" ? "cancelado" : "otro";
-
-                <tr>
-                    <td>@orden.IdOrden</td>
-                    <td>@orden.NumeroOrden</td>
-                    <td>@orden.NombreCliente</td>
-                    <td>@orden.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
-                    <td>@orden.Total.ToString("C")</td>
-                    <td>
-                        <span class="orden-badge @estadoClase">@orden.Estado</span>
-                    </td>
-                    <td>
-                        <!-- Botón para ver detalle -->
-                        <a asp-controller="Admin" asp-action="DetalleOrden" asp-route-idOrden="@orden.IdOrden" class="btn ghost btn-sm">
-                            Ver detalle
-                        </a>
-
-                        @if (orden.Estado.ToLower() == "pendiente")
-                        {
-                            <form asp-controller="Admin" asp-action="ActualizarEstado" method="post" style="display:inline;">
-                                <input type="hidden" name="idOrden" value="@orden.IdOrden" />
-                                <select name="nuevoEstado" class="input" style="padding:3px 6px; border-radius:6px;">
-                                    <option value="Pagado">Pagado</option>
-                                    <option value="Cancelado">Cancelado</option>
-                                </select>
-                                <button type="submit" class="btn primary btn-sm">Actualizar</button>
-                            </form>
-                        }
-                        else
-                        {
-                            <span class="text-muted">Sin acción</span>
-                        }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <h2><i class="fa-solid fa-receipt" style="color:var(--blue-light);"></i> Órdenes de Clientes</h2>
+    <div class="admin-table-wrap">
+        <table class="ordenes-table">
+            <thead>
+                <tr><th>#</th><th>Número Orden</th><th>Cliente</th><th>Fecha</th><th>Total</th><th>Estado</th><th>Acción</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var orden in Model)
+                {
+                    var estadoClase = orden.Estado.ToLower() == "pendiente" ? "pendiente" :
+                        orden.Estado.ToLower() == "pagado" ? "pagado" :
+                        orden.Estado.ToLower() == "cancelado" ? "cancelado" : "otro";
+                    <tr>
+                        <td>@orden.IdOrden</td>
+                        <td style="color:var(--text);">@orden.NumeroOrden</td>
+                        <td>@orden.NombreCliente</td>
+                        <td>@orden.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td style="color:var(--amber-light);font-weight:600;">@orden.Total.ToString("C")</td>
+                        <td><span class="orden-badge @estadoClase">@orden.Estado</span></td>
+                        <td>
+                            <a asp-controller="Admin" asp-action="DetalleOrden" asp-route-idOrden="@orden.IdOrden" class="action-btn view" title="Ver detalle"><i class="fa-solid fa-eye"></i></a>
+                            @if (orden.Estado.ToLower() == "pendiente")
+                            {
+                                <form asp-controller="Admin" asp-action="ActualizarEstado" method="post" style="display:inline-flex;align-items:center;gap:6px;">
+                                    <input type="hidden" name="idOrden" value="@orden.IdOrden" />
+                                    <select name="nuevoEstado" class="input" style="padding:5px 10px;font-size:13px;">
+                                        <option value="Pagado">Pagado</option>
+                                        <option value="Cancelado">Cancelado</option>
+                                    </select>
+                                    <button type="submit" class="btn primary btn-sm">Actualizar</button>
+                                </form>
+                            }
+                            else
+                            { <span class="text-muted" style="font-size:13px;">Sin acción</span> }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>

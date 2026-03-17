@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using ProyectoPyme.Models;
 using Stripe.Checkout;
+using System.Security.Claims;
 
 namespace ProyectoPyme.Controllers
 {
@@ -24,7 +25,7 @@ namespace ProyectoPyme.Controllers
         [HttpPost]
         public IActionResult CrearOrden(Orden orden)
         {
-            int usuarioId = 1;
+            int usuarioId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
             var carritoItems = _context.Carrito
                 .Include(c => c.Producto)

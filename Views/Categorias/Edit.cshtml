@@ -1,6 +1,12 @@
-﻿@model ProyectoPyme.Models.Categoria
+@model ProyectoPyme.Models.Categoria
+@{ ViewData["Title"] = "Editar Categoría"; Layout = "~/Views/Shared/_AdminLayout.cshtml"; }
 
-<h2 class="page-title">Nueva Categoría</h2>
+<div class="page-header">
+    <div>
+        <h2><i class="fa-solid fa-pen" style="color:var(--amber-light);"></i> Editar Categoría</h2>
+    </div>
+    <a href="/Categorias" class="btn ghost"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+</div>
 
 <form method="post" class="form-card">
     <div class="field">
@@ -8,15 +14,13 @@
         <input asp-for="Nombre" class="input" />
         <span asp-validation-for="Nombre" class="error"></span>
     </div>
-
     <div class="field">
         <label asp-for="Descripcion"></label>
         <textarea asp-for="Descripcion" class="input"></textarea>
         <span asp-validation-for="Descripcion" class="error"></span>
     </div>
-
     <div class="actions">
-        <button type="submit" class="btn primary">Guardar</button>
+        <button type="submit" class="btn primary amber"><i class="fa-solid fa-floppy-disk"></i> Guardar</button>
         <a href="/Categorias" class="btn ghost">Cancelar</a>
     </div>
 </form>
