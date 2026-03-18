@@ -10,15 +10,15 @@
             <p>Selecciona un módulo para comenzar a gestionar tu perfumería</p>
             <div class="dashboard-cards">
                 <a href="/Productos" class="dash-card blue">
-                    <div class="dash-icon blue"></div>
+                    <div class="dash-icon blue"><i class="fa-solid fa-droplet"></i></div>
                     <h2>Perfumes</h2>
                 </a>
                 <a href="/Categorias" class="dash-card amber">
-                    <div class="dash-icon amber"></div>
+                    <div class="dash-icon amber"><i class="fa-solid fa-layer-group"></i></div>
                     <h2>Categorías</h2>
                 </a>
                 <a href="@Url.Action("Ordenes", "Admin")" class="dash-card green">
-                    <div class="dash-icon green"></div>
+                    <div class="dash-icon green"><i class="fa-solid fa-receipt"></i></div>
                     <h2>Órdenes</h2>
                 </a>
             </div>
@@ -35,7 +35,7 @@ else
             <div class="hero-content">
                 <h1>ProyectoPyme</h1>
                 <p>Gestión moderna de productos y categorías para pequeñas empresas.</p>
-                <a href="/Productos" class="btn-hero">Ver Productos</a>
+                <a href="/Productos" class="btn-hero"><i class="fa-solid fa-droplet"></i> Ver Productos</a>
             </div>
         </div>
     </section>
@@ -50,11 +50,11 @@ else
                 <div style="padding:0 18px 18px;">
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <a href="/Productos" class="btn-oferta">Comprar</a>
+                        <a href="/Productos" class="btn-oferta"><i class="fa-solid fa-cart-shopping"></i> Comprar</a>
                     }
                     else
                     {
-                        <a href="/Cuentas/Login" class="btn-oferta">Iniciar sesión para comprar</a>
+                        <a href="/Cuentas/Login" class="btn-oferta"><i class="fa-solid fa-cart-shopping"></i> Iniciar sesión para comprar</a>
                     }
                 </div>
             </div>
@@ -65,11 +65,11 @@ else
                 <div style="padding:0 18px 18px;">
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <a href="/Productos" class="btn-oferta">Comprar</a>
+                        <a href="/Productos" class="btn-oferta"><i class="fa-solid fa-cart-shopping"></i> Comprar</a>
                     }
                     else
                     {
-                        <a href="/Cuentas/Login" class="btn-oferta">Iniciar sesión para comprar</a>
+                        <a href="/Cuentas/Login" class="btn-oferta"><i class="fa-solid fa-cart-shopping"></i> Iniciar sesión para comprar</a>
                     }
                 </div>
             </div>
