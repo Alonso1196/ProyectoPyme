@@ -65,13 +65,19 @@ namespace ProyectoPyme.Controllers
                     Quantity = item.Cantidad
                 }).ToList();
 
+
+                // Construir baseUrl con puerto si corresponde
+                var baseUrl = $"{Request.Scheme}://{Request.Host}";
+                var successUrl = $"{baseUrl}/Orden/PagoExitoso?ordenId={orden.IdOrden}";
+                var cancelUrl = $"{baseUrl}/Orden/PagoCancelado?ordenId={orden.IdOrden}";
+
                 var options = new SessionCreateOptions
                 {
                     PaymentMethodTypes = ["card"],
                     LineItems = lineItems,
                     Mode = "payment",
-                    SuccessUrl = Url.Action("PagoExitoso", "Orden", new { ordenId = orden.IdOrden }, Request.Scheme),
-                    CancelUrl = Url.Action("PagoCancelado", "Orden", new { ordenId = orden.IdOrden }, Request.Scheme)
+                    SuccessUrl = successUrl,
+                    CancelUrl = cancelUrl
                 };
 
                 var service = new SessionService();
