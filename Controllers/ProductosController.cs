@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProyectoPyme.Models;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ProyectoPyme.Controllers
 {
@@ -26,6 +28,18 @@ namespace ProyectoPyme.Controllers
 				.Include(p => p.Esencia);
 
 			return View(await productos.ToListAsync());
+		}
+
+		// Filtrar productos por categoría (público)
+		[AllowAnonymous]
+		public async Task<IActionResult> Categoria(int id)
+		{
+			var productos = _context.Productos
+				.Include(p => p.Categoria)
+				.Include(p => p.Esencia)
+				.Where(p => p.CategoriaId == id);
+
+			return View("Index", await productos.ToListAsync());
 		}
 
 		// Solo Admin (GET)
@@ -112,8 +126,9 @@ namespace ProyectoPyme.Controllers
 					var rutaViejaRelativa = productoDb.RutaImagen.TrimStart('/')
 						.Replace("/", Path.DirectorySeparatorChar.ToString());
 
-					var rutaViejaFisica = Path.Combine(
+                    var rutaViejaFisica = Path.Combine(
 						Directory.GetCurrentDirectory(),
+						"wwwroot",
 						rutaViejaRelativa
 					);
 
@@ -166,8 +181,9 @@ namespace ProyectoPyme.Controllers
 				var rutaRelativa = producto.RutaImagen.TrimStart('/')
 					.Replace("/", Path.DirectorySeparatorChar.ToString());
 
-				var rutaFisica = Path.Combine(
+                var rutaFisica = Path.Combine(
 					Directory.GetCurrentDirectory(),
+					"wwwroot",
 					rutaRelativa
 				);
 
@@ -231,7 +247,7 @@ namespace ProyectoPyme.Controllers
 
 		private async Task<string> GuardarImagenAsync(IFormFile imagen)
 		{
-			var carpeta = Path.Combine(Directory.GetCurrentDirectory(), "Uploads", "Productos");
+            var carpeta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "Productos");
 			Directory.CreateDirectory(carpeta);
 
 			var extension = Path.GetExtension(imagen.FileName).ToLowerInvariant();
@@ -243,7 +259,7 @@ namespace ProyectoPyme.Controllers
 				await imagen.CopyToAsync(stream);
 			}
 
-			return $"/uploads/Productos/{nombreArchivo}";
+            return $"/images/Productos/{nombreArchivo}";
 		}
 	}
 }

@@ -40,11 +40,13 @@ else
     <div class="user-cat-cards">
         @foreach (var c in Model)
         {
-            <div class="u-cat-card">
-                <div class="u-cat-icon"><i class="fa-solid fa-layer-group"></i></div>
-                <h3>@c.Nombre</h3>
-                <p>@c.Descripcion</p>
-            </div>
+            <a asp-controller="Productos" asp-action="Categoria" asp-route-id="@c.CategoriaId" class="u-cat-link" style="text-decoration:none;color:inherit;">
+                <div class="u-cat-card">
+                    <div class="u-cat-icon"><i class="fa-solid fa-layer-group"></i></div>
+                    <h3>@c.Nombre</h3>
+                    <p>@c.Descripcion</p>
+                </div>
+            </a>
         }
     </div>
 }

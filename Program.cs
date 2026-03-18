@@ -50,6 +50,30 @@ app.UseStaticFiles(new StaticFileOptions
     RequestPath = "/uploads"
 });
 
+// Asegurar carpeta centralizada para imágenes en wwwroot/images/Productos
+var imagesFolder = Path.Combine(app.Environment.ContentRootPath, "wwwroot", "images", "Productos");
+Directory.CreateDirectory(imagesFolder);
+
+// Copiar imágenes existentes de Uploads a la carpeta centralizada si aún no existen
+if (Directory.Exists(uploadsPath))
+{
+    foreach (var file in Directory.GetFiles(uploadsPath))
+    {
+        try
+        {
+            var dest = Path.Combine(imagesFolder, Path.GetFileName(file));
+            if (!System.IO.File.Exists(dest))
+            {
+                System.IO.File.Copy(file, dest);
+            }
+        }
+        catch
+        {
+            // noop: no detener la aplicación por un archivo que no se pudo copiar
+        }
+    }
+}
+
 app.UseRouting();
 
 app.UseAuthentication();
