@@ -72,8 +72,7 @@ namespace ProyectoPyme.Controllers
 			_context.Productos.Add(producto);
 			await _context.SaveChangesAsync();
 
-			TempData["Success"] = "Producto creado correctamente.";
-			return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { success = true });
 		}
 
 		// Solo Admin (GET)
@@ -144,8 +143,7 @@ namespace ProyectoPyme.Controllers
 			_context.Update(producto);
 			await _context.SaveChangesAsync();
 
-			TempData["Success"] = "Producto actualizado correctamente.";
-			return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { success = true });
 		}
 
 		// Solo Admin (GET)
@@ -196,8 +194,7 @@ namespace ProyectoPyme.Controllers
 			_context.Productos.Remove(producto);
 			await _context.SaveChangesAsync();
 
-			TempData["Success"] = "Producto eliminado correctamente.";
-			return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { success = true });
 		}
 
 		private void CargarCombos(int? categoriaId = null, int? esenciaId = null)

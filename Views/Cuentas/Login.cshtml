@@ -13,10 +13,6 @@
             <p class="login-error">@ViewBag.Error</p>
         }
 
-        @if (TempData["Success"] != null)
-        {
-            <p class="login-success">@TempData["Success"]</p>
-        }
 
         <form asp-action="Login" method="post">
 

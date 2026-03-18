@@ -1,5 +1,24 @@
 @model IEnumerable<ProyectoPyme.Models.Productos>
+
+
 @{ ViewData["Title"] = "Productos"; }
+
+@{
+    var showSuccess = Context.Request.Query["success"] == "true";
+}
+@if (showSuccess)
+{
+    <script>
+        window.addEventListener('DOMContentLoaded', function() {
+            alert('Operación realizada correctamente.');
+        });
+    </script>
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
 
 @if (User.IsInRole("Admin"))
 {
