@@ -1,5 +1,5 @@
 @model IEnumerable<ProyectoPyme.Models.Categoria>
-@{ ViewData["Title"] = "Categorías"; }
+@{ ViewData["Title"] = "Categorías"; Layout = User.IsInRole("Admin") ? "~/Views/Shared/_AdminLayout.cshtml" : "~/Views/Shared/_Layout.cshtml"; }
 
 @if (User.IsInRole("Admin"))
 {
@@ -10,8 +10,14 @@
         </div>
         <a href="/Categorias/Create" class="btn primary amber"><i class="fa-solid fa-plus"></i> Nueva categoría</a>
     </div>
+    <div class="search-bar">
+        <div class="search-field">
+            <label for="adminCatSearch"><i class="fa-solid fa-magnifying-glass"></i> Búsqueda</label>
+            <input type="text" id="adminCatSearch" class="search-input" placeholder="Nombre o descripción..." />
+        </div>
+    </div>
     <div class="admin-table-wrap">
-        <table class="admin-table">
+        <table id="adminCategoriasTable" class="admin-table">
             <thead>
                 <tr><th>ID</th><th>Nombre</th><th>Descripción</th><th style="text-align:right;">Acciones</th></tr>
             </thead>
@@ -49,4 +55,33 @@ else
             </a>
         }
     </div>
+    <div class="no-results" id="noResultsCatClient">No se encontraron categorías con ese criterio.</div>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // ===================== ADMIN: DataTable =====================
+            if ($('#adminCategoriasTable').length) {
+                var table = $('#adminCategoriasTable').DataTable({
+                    paging: true, searching: true, pageLength: 10, lengthMenu: [5, 10, 25, 50],
+                    language: {
+                        lengthMenu: "Mostrar _MENU_ por página",
+                        zeroRecords: "No se encontraron resultados",
+                        info: "Mostrando página _PAGE_ de _PAGES_",
+                        infoEmpty: "No hay registros disponibles",
+                        infoFiltered: "(filtrado de _MAX_ registros totales)",
+                        search: "Buscar:",
+                        paginate: { first: "Primero", last: "Último", next: "Siguiente", previous: "Anterior" }
+                    }
+                });
+
+                $('#adminCatSearch').on('keyup', function () {
+                    table.search($(this).val()).draw();
+                });
+            }
+
+
+        });
+    </script>
 }

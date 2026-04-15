@@ -1,7 +1,7 @@
 @model IEnumerable<ProyectoPyme.Models.Productos>
 
 
-@{ ViewData["Title"] = "Productos"; }
+@{ ViewData["Title"] = "Productos"; Layout = User.IsInRole("Admin") ? "~/Views/Shared/_AdminLayout.cshtml" : "~/Views/Shared/_Layout.cshtml"; }
 
 @{
     var showSuccess = Context.Request.Query["success"] == "true";
@@ -29,8 +29,16 @@
         </div>
         <a href="/Productos/Create" class="btn primary"><i class="fa-solid fa-plus"></i> Nuevo perfume</a>
     </div>
+    <div class="search-bar">
+        <div class="search-field">
+            <label for="adminProductSearch"><i class="fa-solid fa-magnifying-glass"></i> Búsqueda</label>
+            <input type="text" id="adminProductSearch" class="search-input" placeholder="Nombre, categoría, esencia..." />
+        </div>
+        <button id="btnDisponibilidad" class="filter-btn"><i class="fa-solid fa-check-circle"></i> Ver Solo Disponibles</button>
+        <button id="btnSortPrecio" class="filter-btn"><i class="fa-solid fa-arrow-down-wide-short"></i> Ordenar por Precio ↓</button>
+    </div>
     <div class="admin-table-wrap">
-        <table class="admin-table">
+        <table id="adminProductosTable" class="admin-table">
             <thead>
                 <tr>
                     <th>ID</th><th>Nombre</th><th>Categoría</th><th>Esencia</th><th>Precio</th>
@@ -74,7 +82,17 @@ else
         <div>
             <h2><i class="fa-solid fa-droplet" style="color:var(--blue-light);"></i> Perfumes</h2>
             <p class="muted">Catálogo de fragancias y perfumes de lujo</p>
+            @if (!string.IsNullOrWhiteSpace(ViewBag.SearchQuery))
+            {
+                <p class="search-result-info">
+                    Resultados para: <strong>"@ViewBag.SearchQuery"</strong>
+                    <a href="/Productos" class="search-clear"><i class="fa-solid fa-xmark"></i> Limpiar</a>
+                </p>
+            }
         </div>
+    </div>
+    <div class="search-bar">
+        <button id="btnDisponibilidadClient" class="filter-btn"><i class="fa-solid fa-check-circle"></i> Ver Solo Disponibles</button>
     </div>
     <div class="user-product-cards">
         @foreach (var p in Model)
@@ -116,4 +134,84 @@ else
             </div>
         }
     </div>
+    <div class="no-results" id="noResultsClient">No se encontraron perfumes con ese criterio.</div>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // ===================== ADMIN: DataTable =====================
+            if ($('#adminProductosTable').length) {
+                var table = $('#adminProductosTable').DataTable({
+                    paging: true, searching: true, pageLength: 10, lengthMenu: [5, 10, 25, 50],
+                    language: {
+                        lengthMenu: "Mostrar _MENU_ por página",
+                        zeroRecords: "No se encontraron resultados",
+                        info: "Mostrando página _PAGE_ de _PAGES_",
+                        infoEmpty: "No hay registros disponibles",
+                        infoFiltered: "(filtrado de _MAX_ registros totales)",
+                        search: "Buscar:",
+                        paginate: { first: "Primero", last: "Último", next: "Siguiente", previous: "Anterior" }
+                    }
+                });
+
+                $('#adminProductSearch').on('keyup', function () {
+                    table.search($(this).val()).draw();
+                });
+
+                var showAvailable = false;
+                $.fn.dataTable.ext.search.push(function (settings, data) {
+                    if (settings.nTable.id !== 'adminProductosTable') return true;
+                    if (!showAvailable) return true;
+                    var cell = data[5];
+                    return cell && cell.trim() !== '' && !cell.includes('xmark');
+                });
+                $('#btnDisponibilidad').on('click', function () {
+                    showAvailable = !showAvailable;
+                    $(this).html(showAvailable
+                        ? '<i class="fa-solid fa-list"></i> Ver Todos'
+                        : '<i class="fa-solid fa-check-circle"></i> Ver Solo Disponibles');
+                    $(this).toggleClass('active');
+                    table.draw();
+                });
+
+                var precioAsc = false;
+                $('#btnSortPrecio').on('click', function () {
+                    var order = precioAsc ? 'asc' : 'desc';
+                    table.order([4, order]).draw();
+                    precioAsc = !precioAsc;
+                    $(this).html('<i class="fa-solid fa-arrow-down-wide-short"></i> Ordenar por Precio ' + (precioAsc ? '↑' : '↓'));
+                });
+            }
+
+            // ===================== CLIENTE: Filtro disponibilidad =====================
+            if ($('#btnDisponibilidadClient').length) {
+                var showAvailClient = false;
+
+                function filterClientCards() {
+                    var visible = 0;
+                    $('.u-product-card').each(function () {
+                        var isAvail = $(this).find('.u-avail-ok').length > 0;
+                        var matchFilter = !showAvailClient || isAvail;
+                        if (matchFilter) {
+                            $(this).show();
+                            visible++;
+                        } else {
+                            $(this).hide();
+                        }
+                    });
+                    $('#noResultsClient').toggle(visible === 0);
+                }
+
+                $('#btnDisponibilidadClient').on('click', function () {
+                    showAvailClient = !showAvailClient;
+                    $(this).html(showAvailClient
+                        ? '<i class="fa-solid fa-list"></i> Ver Todos'
+                        : '<i class="fa-solid fa-check-circle"></i> Ver Solo Disponibles');
+                    $(this).toggleClass('active');
+                    filterClientCards();
+                });
+            }
+        });
+    </script>
 }

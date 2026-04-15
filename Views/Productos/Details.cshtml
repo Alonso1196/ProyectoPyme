@@ -1,46 +1,58 @@
 ﻿@model ProyectoPyme.Models.Productos
+@{ ViewData["Title"] = "Detalles del Producto"; Layout = "~/Views/Shared/_AdminLayout.cshtml"; }
 
-@{
-    ViewData["Title"] = "Detalles del Producto";
-}
-
-<h1>Detalles del Producto</h1>
-
-<div>
-    <h4>Producto</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Nombre)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Nombre)
-        </dd>
-
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Precio)
-        </dt>
-        <dd class="col-sm-10">
-            ₡@Html.DisplayFor(model => model.Precio)
-        </dd>
-
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CategoriaId)
-        </dt>
-        <dd class="col-sm-10">
-            @Model.Categoria?.Nombre
-        </dd>
-
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Disponibilidad)
-        </dt>
-        <dd class="col-sm-10">
-            @(Model.Disponibilidad ? "Sí" : "No")
-        </dd>
-    </dl>
+<div class="page-header">
+    <div>
+        <h2><i class="fa-solid fa-droplet" style="color:var(--blue-light);"></i> Detalles del Producto</h2>
+        <p class="muted">Información completa del perfume</p>
+    </div>
+    <a href="/Productos" class="btn ghost"><i class="fa-solid fa-arrow-left"></i> Volver</a>
 </div>
 
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.ProductoId" class="btn btn-primary">Editar</a>
-    <a asp-action="Index" class="btn btn-secondary">Volver a la lista</a>
+<div class="form-card">
+    <div class="info-grid">
+        <div>
+            <span class="label">Nombre</span>
+            <span class="value">@Model.Nombre</span>
+        </div>
+        <div>
+            <span class="label">Precio</span>
+            <span class="value" style="color:var(--amber-light);font-size:18px;">₡@Model.Precio.ToString("N2")</span>
+        </div>
+        <div>
+            <span class="label">Categoría</span>
+            <span class="value">@Model.Categoria?.Nombre</span>
+        </div>
+        <div>
+            <span class="label">Esencia</span>
+            <span class="value">@Model.Esencia?.Nombre</span>
+        </div>
+        <div>
+            <span class="label">Disponibilidad</span>
+            @if (Model.Disponibilidad)
+            {
+                <span style="color:#4ade80;font-weight:600;"><i class="fa-solid fa-check-circle"></i> Disponible</span>
+            }
+            else
+            {
+                <span style="color:#f87171;font-weight:600;"><i class="fa-solid fa-xmark-circle"></i> No disponible</span>
+            }
+        </div>
+        <div>
+            <span class="label">Stock</span>
+            <span class="value">@Model.Stock</span>
+        </div>
+    </div>
+    @if (!string.IsNullOrEmpty(Model.RutaImagen))
+    {
+        <div style="margin-top:20px;">
+            <span class="label">Imagen</span>
+            <img src="@Model.RutaImagen" alt="@Model.Nombre" class="product-img preview" style="margin-top:8px;" />
+        </div>
+    }
+</div>
+
+<div class="actions" style="margin-top:20px;">
+    <a href="/Productos/Edit/@Model.ProductoId" class="btn primary"><i class="fa-solid fa-pen"></i> Editar</a>
+    <a href="/Productos" class="btn ghost">Volver a la lista</a>
 </div>

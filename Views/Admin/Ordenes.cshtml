@@ -3,8 +3,16 @@
 
 <div class="ordenes-container">
     <h2><i class="fa-solid fa-receipt" style="color:var(--blue-light);"></i> Órdenes de Clientes</h2>
+    <div class="search-bar">
+        <div class="search-field">
+            <label for="adminOrdenSearch"><i class="fa-solid fa-magnifying-glass"></i> Búsqueda</label>
+            <input type="text" id="adminOrdenSearch" class="search-input" placeholder="Número, cliente, fecha..." />
+        </div>
+        <button id="btnEstadoFilter" class="filter-btn"><i class="fa-solid fa-filter"></i> Ver Solo Pendientes</button>
+        <button id="btnSortTotal" class="filter-btn"><i class="fa-solid fa-arrow-down-wide-short"></i> Ordenar por Total ↓</button>
+    </div>
     <div class="admin-table-wrap">
-        <table class="ordenes-table">
+        <table id="adminOrdenesTable" class="ordenes-table">
             <thead>
                 <tr><th>#</th><th>Número Orden</th><th>Cliente</th><th>Fecha</th><th>Total</th><th>Estado</th><th>Acción</th></tr>
             </thead>
@@ -43,3 +51,54 @@
         </table>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            if ($('#adminOrdenesTable').length) {
+                var table = $('#adminOrdenesTable').DataTable({
+                    paging: true, searching: true, pageLength: 10, lengthMenu: [5, 10, 25, 50],
+                    language: {
+                        lengthMenu: "Mostrar _MENU_ por página",
+                        zeroRecords: "No se encontraron resultados",
+                        info: "Mostrando página _PAGE_ de _PAGES_",
+                        infoEmpty: "No hay registros disponibles",
+                        infoFiltered: "(filtrado de _MAX_ registros totales)",
+                        search: "Buscar:",
+                        paginate: { first: "Primero", last: "Último", next: "Siguiente", previous: "Anterior" }
+                    }
+                });
+
+                // Búsqueda global
+                $('#adminOrdenSearch').on('keyup', function () {
+                    table.search($(this).val()).draw();
+                });
+
+                // Filtro por estado pendiente
+                var showPendiente = false;
+                $.fn.dataTable.ext.search.push(function (settings, data) {
+                    if (settings.nTable.id !== 'adminOrdenesTable') return true;
+                    if (!showPendiente) return true;
+                    return data[5] && data[5].toLowerCase().includes('pendiente');
+                });
+                $('#btnEstadoFilter').on('click', function () {
+                    showPendiente = !showPendiente;
+                    $(this).html(showPendiente
+                        ? '<i class="fa-solid fa-list"></i> Ver Todas'
+                        : '<i class="fa-solid fa-filter"></i> Ver Solo Pendientes');
+                    $(this).toggleClass('active');
+                    table.draw();
+                });
+
+                // Ordenar por total
+                var totalAsc = false;
+                $('#btnSortTotal').on('click', function () {
+                    var order = totalAsc ? 'asc' : 'desc';
+                    table.order([4, order]).draw();
+                    totalAsc = !totalAsc;
+                    $(this).html('<i class="fa-solid fa-arrow-down-wide-short"></i> Ordenar por Total ' + (totalAsc ? '↑' : '↓'));
+                });
+            }
+        });
+    </script>
+}

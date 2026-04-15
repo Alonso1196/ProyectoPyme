@@ -21,12 +21,23 @@ namespace ProyectoPyme.Controllers
 
 		// Público: Visitante / Cliente / Admin
 		[AllowAnonymous]
-		public async Task<IActionResult> Index()
+		public async Task<IActionResult> Index(string? q)
 		{
 			var productos = _context.Productos
 				.Include(p => p.Categoria)
-				.Include(p => p.Esencia);
+				.Include(p => p.Esencia)
+				.AsQueryable();
 
+			if (!string.IsNullOrWhiteSpace(q))
+			{
+				var term = q.Trim().ToLower();
+				productos = productos.Where(p =>
+					p.Nombre.ToLower().Contains(term) ||
+					(p.Categoria != null && p.Categoria.Nombre.ToLower().Contains(term)) ||
+					(p.Esencia != null && p.Esencia.Nombre.ToLower().Contains(term)));
+			}
+
+			ViewBag.SearchQuery = q;
 			return View(await productos.ToListAsync());
 		}
 
