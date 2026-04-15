@@ -88,9 +88,10 @@ a{color:inherit;text-decoration:none}img{max-width:100%;display:block}ul{list-st
 .main-container{width:92%;max-width:1400px;margin:28px auto;min-height:60vh}
 
 /* HERO */
-.hero{height:50vh;min-height:360px;background:url('/images/Productos/perfumes-portada.jpg') center/cover no-repeat;position:relative;display:flex;align-items:center;justify-content:center;border-radius:0 0 var(--radius-lg) var(--radius-lg);overflow:hidden}
+.hero{height:50vh;min-height:360px;background:url('/images/Productos/perfumes-portada-1.jpg') center/cover no-repeat;position:relative;display:flex;align-items:center;justify-content:center;border-radius:0 0 var(--radius-lg) var(--radius-lg);overflow:hidden}
 .hero-overlay{background:linear-gradient(180deg,rgba(10,22,40,.7),rgba(15,31,58,.85));width:100%;height:100%;display:flex;align-items:center;justify-content:center}
 .hero-content{text-align:center}
+.hero-logo{height:90px;width:auto;margin:0 auto 18px;filter:drop-shadow(0 4px 20px rgba(217,119,6,.35));border-radius:12px}
 .hero-content h1{font-size:48px;font-weight:700;letter-spacing:-1px}
 .hero-content p{margin:14px 0 24px;font-size:17px;color:var(--text-sec)}
 .btn-hero{display:inline-flex;align-items:center;gap:8px;background:var(--amber);color:#fff;padding:12px 28px;border-radius:10px;font-weight:600;transition:all .3s;box-shadow:none}
@@ -122,6 +123,8 @@ a{color:inherit;text-decoration:none}img{max-width:100%;display:block}ul{list-st
 /* FOOTER */
 .main-footer{background:rgba(13,27,46,.8);backdrop-filter:blur(8px);border-top:1px solid var(--border);padding-top:40px;margin-top:60px;color:var(--text-sec)}
 .footer-container{display:flex;justify-content:space-between;padding:0 10%;flex-wrap:wrap;gap:40px;max-width:1400px;margin:auto}
+.footer-brand{display:flex;align-items:center;gap:14px}
+.footer-logo{height:48px;width:auto;border-radius:8px;filter:drop-shadow(0 2px 8px rgba(217,119,6,.25))}
 .footer-container h4{margin-bottom:12px;color:var(--text)}
 .footer-container a{color:var(--text-muted);transition:color .25s}
 .footer-container a:hover{color:var(--amber-light)}
@@ -331,6 +334,12 @@ textarea.input{background:var(--bg-input);color:var(--text);font-family:inherit;
 .u-cat-card h3{font-size:18px;margin-bottom:6px}
 .u-cat-card p{font-size:13px;color:var(--text-muted)}
 
+/* CLIENT PAGE BANNER */
+.client-page-banner{display:flex;align-items:center;gap:18px;margin-bottom:24px;padding:20px 24px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);backdrop-filter:blur(8px)}
+.client-page-banner h2{font-size:28px;font-weight:600;margin:0}
+.client-page-banner .muted{color:var(--text-muted);margin:0}
+.banner-logo{height:56px;width:auto;border-radius:10px;filter:drop-shadow(0 2px 10px rgba(217,119,6,.3))}
+
 /* SEARCH BAR */
 .search-bar{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;margin-bottom:20px}
 .search-bar .search-field{display:flex;flex-direction:column;gap:4px}
@@ -371,6 +380,7 @@ table.dataTable tbody td{border-bottom:1px solid rgba(30,58,95,.5)!important}
     .cart-summary{flex-direction:column;gap:16px;text-align:center}
     .checkout-buttons{flex-direction:column}
     .hero-content h1{font-size:32px}
+    .hero-logo{height:60px}
     .admin-sidebar{width:60px;padding:12px 8px}
     .admin-sidebar .sidebar-logo span,.admin-sidebar .sidebar-label,.admin-sidebar .sidebar-link span{display:none}
     .admin-sidebar .sidebar-logo img{height:36px}

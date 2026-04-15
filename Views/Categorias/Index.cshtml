@@ -42,7 +42,13 @@
 }
 else
 {
-    <h2 class="page-title"><i class="fa-solid fa-layer-group" style="color:var(--amber-light);"></i> Categorías</h2>
+    <div class="client-page-banner">
+        <img src="@Url.Content(ImagePaths.Productos + "/TH-1.png")" alt="Thompson" class="banner-logo" />
+        <div>
+            <h2><i class="fa-solid fa-layer-group" style="color:var(--amber-light);"></i> Categorías</h2>
+            <p class="muted">Explorá nuestras familias olfativas</p>
+        </div>
+    </div>
     <div class="user-cat-cards">
         @foreach (var c in Model)
         {

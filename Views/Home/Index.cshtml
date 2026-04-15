@@ -24,7 +24,7 @@
                 </a>
             </div>
             <div style="margin-top:48px;font-size:12px;color:var(--text-muted);">
-                © @DateTime.Now.Year ProyectoPyme · San José, Costa Rica
+                © @DateTime.Now.Year Perfumería Thompson · San José, Costa Rica
             </div>
         </div>
     </div>
@@ -34,9 +34,10 @@ else
     <section class="hero">
         <div class="hero-overlay">
             <div class="hero-content">
-                <h1>ProyectoPyme</h1>
-                <p>Gestión moderna de productos y categorías para pequeñas empresas.</p>
-                <a href="/Productos" class="btn-hero"><i class="fa-solid fa-droplet"></i> Ver Productos</a>
+                <img src="@Url.Content(ImagePaths.Productos + "/Elegant Perfume Shop Logo with Gold Accents-1.jpg")" alt="Perfumería Thompson" class="hero-logo" />
+                <h1>Perfumería Thompson</h1>
+                <p>Fragancias de lujo que definen tu esencia. Descubrí tu aroma ideal.</p>
+                <a href="/Productos" class="btn-hero"><i class="fa-solid fa-droplet"></i> Explorar Perfumes</a>
             </div>
         </div>
     </section>
@@ -45,7 +46,7 @@ else
         <h2 class="section-title">✨ Productos Destacados</h2>
         <div class="product-grid">
             <div class="product-card">
-                <img src="@Url.Content(ImagePaths.Productos + "/Jean Paul Gaultier Le Male Le Parfum.jfif")" alt="Jean Paul Gaultier Le Male Le Parfum">
+                <img src="@Url.Content(ImagePaths.Productos + "/Jean Paul Gaultier Le Male Le Parfum-1.jfif")" alt="Jean Paul Gaultier Le Male Le Parfum">
                 <h4>Jean Paul Gaultier Le Male Le Parfum</h4>
                 <p>Una fragancia intensa con notas de vainilla, cardamomo y lavanda que transmite elegancia y carácter.</p>
                 <div style="padding:0 18px 18px;">
@@ -60,7 +61,7 @@ else
                 </div>
             </div>
             <div class="product-card">
-                <img src="@Url.Content(ImagePaths.Productos + "/Invictus legend Paco Rabanne.jfif")" alt="Invictus Legend Paco Rabanne">
+                <img src="@Url.Content(ImagePaths.Productos + "/Invictus legend Paco Rabanne-1.jfif")" alt="Invictus Legend Paco Rabanne">
                 <h4>Invictus Legend - Paco Rabanne</h4>
                 <p>Fragancia poderosa con notas marinas y amaderadas que evocan fuerza y espíritu ganador.</p>
                 <div style="padding:0 18px 18px;">
@@ -75,7 +76,7 @@ else
                 </div>
             </div>
             <div class="product-card">
-                <img src="@Url.Content(ImagePaths.Productos + "/Carolina Herrera 212 Sexy.jfif")" alt="Carolina Herrera 212 Sexy">
+                <img src="@Url.Content(ImagePaths.Productos + "/Carolina Herrera 212 Sexy-1.jfif")" alt="Carolina Herrera 212 Sexy">
                 <h4>Carolina Herrera 212 Sexy</h4>
                 <p>Aroma seductor con notas de vainilla, almizcle y pimienta rosa ideal para la noche.</p>
                 <div style="padding:0 18px 18px;">
@@ -90,7 +91,7 @@ else
                 </div>
             </div>
             <div class="product-card">
-                <img src="@Url.Content(ImagePaths.Productos + "/Valentino Born In Roma Intense Eau De Parfum.jfif")" alt="Valentino Born In Roma Intense">
+                <img src="@Url.Content(ImagePaths.Productos + "/Valentino Born In Roma Intense Eau De Parfum-1.jfif")" alt="Valentino Born In Roma Intense">
                 <h4>Valentino Born In Roma Intense</h4>
                 <p>Fragancia moderna con vainilla bourbon y ámbar que representa lujo y sofisticación.</p>
                 <div style="padding:0 18px 18px;">
@@ -112,7 +113,7 @@ else
         <div class="ofertas-grid">
             <div class="oferta-card">
                 <span class="badge-oferta">-30%</span>
-                <img src="@Url.Content(ImagePaths.Productos + "/Sauvage Dior .jfif")" alt="Perfume Dior">
+                <img src="@Url.Content(ImagePaths.Productos + "/Sauvage Dior -1.jfif")" alt="Perfume Dior">
                 <h4>Dior Sauvage</h4>
                 <p class="precio"><span class="precio-antiguo">$120</span><span class="precio-nuevo">$84</span></p>
                 @if (User.Identity.IsAuthenticated)
@@ -122,7 +123,7 @@ else
             </div>
             <div class="oferta-card">
                 <span class="badge-oferta">-25%</span>
-                <img src="@Url.Content(ImagePaths.Productos + "/Bleu de Chanel.jfif")" alt="Perfume Chanel">
+                <img src="@Url.Content(ImagePaths.Productos + "/Bleu de Chanel-1.jfif")" alt="Perfume Chanel">
                 <h4>Chanel Bleu</h4>
                 <p class="precio"><span class="precio-antiguo">$140</span><span class="precio-nuevo">$105</span></p>
                 @if (User.Identity.IsAuthenticated)
@@ -132,7 +133,7 @@ else
             </div>
             <div class="oferta-card">
                 <span class="badge-oferta">-20%</span>
-                <img src="@Url.Content(ImagePaths.Productos + "/Versace Eros.jfif")" alt="Perfume Versace">
+                <img src="@Url.Content(ImagePaths.Productos + "/Versace Eros-1.jfif")" alt="Perfume Versace">
                 <h4>Versace Eros</h4>
                 <p class="precio"><span class="precio-antiguo">$110</span><span class="precio-nuevo">$88</span></p>
                 @if (User.Identity.IsAuthenticated)
@@ -142,7 +143,7 @@ else
             </div>
             <div class="oferta-card">
                 <span class="badge-oferta">-35%</span>
-                <img src="@Url.Content(ImagePaths.Productos + "/1million.jfif")" alt="Perfume Paco Rabanne">
+                <img src="@Url.Content(ImagePaths.Productos + "/1million-1.jfif")" alt="Perfume Paco Rabanne">
                 <h4>1 Million</h4>
                 <p class="precio"><span class="precio-antiguo">$130</span><span class="precio-nuevo">$84</span></p>
                 @if (User.Identity.IsAuthenticated)
@@ -155,10 +156,16 @@ else
 
     <footer class="main-footer">
         <div class="footer-container">
-            <div><h4>ProyectoPyme</h4><p>Catálogo de perfumes.</p></div>
+            <div class="footer-brand">
+                <img src="@Url.Content(ImagePaths.Productos + "/TH-1.png")" alt="Thompson" class="footer-logo" />
+                <div>
+                    <h4>Perfumería Thompson</h4>
+                    <p>Fragancias de lujo para cada ocasión.</p>
+                </div>
+            </div>
             <div><h4>Enlaces</h4><ul><li><a href="/Productos">Productos</a></li><li><a href="/Categorias">Categorías</a></li><li><a href="/Cuentas/Login">Login</a></li></ul></div>
             <div><h4>Contacto</h4><p>Email: raqa96@@icloud.com</p><p>Tel: +506 71048250</p></div>
         </div>
-        <div class="footer-bottom">© @DateTime.Now.Year - ProyectoPyme</div>
+        <div class="footer-bottom">© @DateTime.Now.Year Perfumería Thompson · San José, Costa Rica</div>
     </footer>
 }

@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Admin · Perfumería Thompson</title>
+    <link rel="icon" type="image/png" href="~/images/Productos/TH-1.png" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -13,7 +14,7 @@
     <div class="admin-layout">
         <aside class="admin-sidebar">
             <a href="/" class="sidebar-logo">
-                <img src="@Url.Content(ImagePaths.Productos + "/Elegant Perfume Shop Logo with Gold Accents.jpg")" alt="Perfumería Thompson">
+                <img src="@Url.Content(ImagePaths.Productos + "/Elegant Perfume Shop Logo with Gold Accents-1.jpg")" alt="Perfumería Thompson">
             </a>
             <div class="sidebar-label">Gestión</div>
             <a href="/Home/Index" class="sidebar-link @(ViewData["Title"]?.ToString() == "Inicio" ? "active" : "")">

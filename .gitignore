@@ -4,3 +4,4 @@ bin/
 obj/
 *.user
 *.csproj.user
+appsettings.json
