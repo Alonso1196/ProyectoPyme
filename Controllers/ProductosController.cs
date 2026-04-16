@@ -56,6 +56,42 @@ namespace ProyectoPyme.Controllers
 			return View("Index", await productos.ToListAsync());
 		}
 
+		// Público: detalle de producto (cualquier visitante)
+		[AllowAnonymous]
+		public async Task<IActionResult> Detalle(int? id)
+		{
+			if (id == null)
+				return NotFound();
+
+			var producto = await _context.Productos
+				.Include(p => p.Categoria)
+				.Include(p => p.Esencia)
+				.FirstOrDefaultAsync(m => m.ProductoId == id);
+
+			if (producto == null)
+				return NotFound();
+
+			return View(producto);
+		}
+
+		// Solo Admin: detalle completo con opciones de edición
+		[Authorize(Roles = "Admin")]
+		public async Task<IActionResult> Details(int? id)
+		{
+			if (id == null)
+				return NotFound();
+
+			var producto = await _context.Productos
+				.Include(p => p.Categoria)
+				.Include(p => p.Esencia)
+				.FirstOrDefaultAsync(m => m.ProductoId == id);
+
+			if (producto == null)
+				return NotFound();
+
+			return View(producto);
+		}
+
 		// Solo Admin (GET)
 		[Authorize(Roles = "Admin")]
 		public IActionResult Create()

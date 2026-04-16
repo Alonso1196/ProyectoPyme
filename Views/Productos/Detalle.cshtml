@@ -1,0 +1,82 @@
+@model ProyectoPyme.Models.Productos
+@{ ViewData["Title"] = Model.Nombre + " · Perfumería Thompson"; }
+
+<div class="detalle-container">
+    <a href="/Productos" class="btn ghost" style="margin-bottom:18px;display:inline-flex;align-items:center;gap:6px;">
+        <i class="fa-solid fa-arrow-left"></i> Volver a productos
+    </a>
+
+    <div class="detalle-card">
+        <div class="detalle-img-col">
+            @if (!string.IsNullOrEmpty(Model.RutaImagen))
+            {
+                <img src="@Model.RutaImagen" alt="@Model.Nombre" class="detalle-img" />
+            }
+            else
+            {
+                <div class="detalle-img-placeholder">
+                    <i class="fa-solid fa-droplet" style="font-size:64px;opacity:.25;"></i>
+                </div>
+            }
+        </div>
+        <div class="detalle-info-col">
+            <h1 class="detalle-nombre">@Model.Nombre</h1>
+            <span class="detalle-categoria">@Model.Categoria?.Nombre</span>
+            <p class="detalle-esencia"><strong>Esencia:</strong> @Model.Esencia?.Nombre</p>
+            <div class="detalle-price">₡@Model.Precio.ToString("N2")</div>
+            <div class="detalle-availability">
+                @if (Model.Disponibilidad)
+                {
+                    <span class="u-dot ok"></span><span class="u-avail-ok">Disponible</span>
+                    <span class="detalle-stock">(@Model.Stock en stock)</span>
+                }
+                else
+                {
+                    <span class="u-dot bad"></span><span class="u-avail-bad">Agotado</span>
+                }
+            </div>
+
+            <div class="detalle-actions">
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    if (Model.Disponibilidad)
+                    {
+                        <a asp-controller="Carrito" asp-action="Agregar" asp-route-id="@Model.ProductoId" class="btn primary" style="justify-content:center;">
+                            <i class="fa-solid fa-cart-shopping"></i> Agregar al carrito
+                        </a>
+                    }
+                    else
+                    {
+                        <button class="btn ghost" disabled style="opacity:.5;">No disponible</button>
+                    }
+                }
+                else
+                {
+                    <a asp-controller="Cuentas" asp-action="Login" class="btn ghost" style="justify-content:center;">
+                        <i class="fa-solid fa-right-to-bracket"></i> Iniciar sesión para comprar
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .detalle-container { max-width: 900px; margin: 30px auto; padding: 0 16px; }
+    .detalle-card { display: flex; gap: 36px; background: var(--bg-card, #1e1e2e); border-radius: 16px; padding: 32px; box-shadow: 0 2px 16px rgba(0,0,0,.15); }
+    .detalle-img-col { flex: 0 0 340px; }
+    .detalle-img { width: 100%; border-radius: 12px; object-fit: cover; }
+    .detalle-img-placeholder { width: 100%; height: 300px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,.04); border-radius: 12px; }
+    .detalle-info-col { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+    .detalle-nombre { font-size: 28px; font-weight: 700; margin: 0; }
+    .detalle-categoria { font-size: 14px; opacity: .65; text-transform: uppercase; letter-spacing: 1px; }
+    .detalle-esencia { margin: 4px 0 0; }
+    .detalle-price { font-size: 26px; font-weight: 700; color: var(--amber-light, #fbbf24); margin-top: 8px; }
+    .detalle-availability { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+    .detalle-stock { font-size: 13px; opacity: .6; }
+    .detalle-actions { margin-top: auto; padding-top: 16px; }
+    @@media (max-width: 680px) {
+        .detalle-card { flex-direction: column; }
+        .detalle-img-col { flex: none; }
+    }
+</style>
