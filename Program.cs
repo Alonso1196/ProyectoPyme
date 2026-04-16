@@ -79,6 +79,34 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+// ─── Rutas Admin ───
+app.MapControllerRoute(
+    name: "adminProductos",
+    pattern: "Admin/Productos/{action=Index}/{id?}",
+    defaults: new { controller = "Productos" },
+    constraints: new { action = "(Index|Create|Edit|Delete)" });
+
+app.MapControllerRoute(
+    name: "adminCategorias",
+    pattern: "Admin/Categorias/{action=Index}/{id?}",
+    defaults: new { controller = "Categorias" },
+    constraints: new { action = "(Index|Create|Edit|Delete)" });
+
+app.MapControllerRoute(
+    name: "adminOrdenes",
+    pattern: "Admin/Ordenes",
+    defaults: new { controller = "Admin", action = "Ordenes" });
+
+app.MapControllerRoute(
+    name: "adminDetalleOrden",
+    pattern: "Admin/Ordenes/Detalle/{idOrden?}",
+    defaults: new { controller = "Admin", action = "DetalleOrden" });
+
+app.MapControllerRoute(
+    name: "adminActualizarEstado",
+    pattern: "Admin/Ordenes/ActualizarEstado",
+    defaults: new { controller = "Admin", action = "ActualizarEstado" });
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

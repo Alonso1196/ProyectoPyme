@@ -22,12 +22,10 @@
 
 @if (User.IsInRole("Admin"))
 {
-    <div class="page-header">
-        <div>
-            <h2><i class="fa-solid fa-droplet" style="color:var(--blue-light);"></i> Perfumes</h2>
-            <p class="muted">Catálogo de fragancias y perfumes de lujo</p>
-        </div>
-        <a href="/Productos/Create" class="btn primary"><i class="fa-solid fa-plus"></i> Nuevo perfume</a>
+    <div class="ordenes-container">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+        <h2><i class="fa-solid fa-droplet" style="color:var(--blue-light);"></i> Perfumes</h2>
+        <a href="/Admin/Productos/Create" class="btn primary"><i class="fa-solid fa-plus"></i> Nuevo perfume</a>
     </div>
     <div class="search-bar">
         <div class="search-field">
@@ -66,14 +64,15 @@
                         </td>
                         <td>
                             <div class="action-btns">
-                                <a href="/Productos/Edit/@p.ProductoId" class="action-btn edit" title="Editar"><i class="fa-solid fa-pen"></i></a>
-                                <a href="/Productos/Delete/@p.ProductoId" class="action-btn delete" title="Eliminar"><i class="fa-solid fa-trash"></i></a>
+                                <a href="/Admin/Productos/Edit/@p.ProductoId" class="action-btn edit" title="Editar"><i class="fa-solid fa-pen"></i></a>
+                                <a href="/Admin/Productos/Delete/@p.ProductoId" class="action-btn delete" title="Eliminar"><i class="fa-solid fa-trash"></i></a>
                             </div>
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
+    </div>
     </div>
 }
 else

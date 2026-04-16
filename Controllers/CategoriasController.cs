@@ -19,6 +19,9 @@ namespace ProyectoPyme.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
+            if (Request.Path.StartsWithSegments("/Admin") && !User.IsInRole("Admin"))
+                return Forbid();
+
             return View(await _context.Categorias.ToListAsync());
         }
 

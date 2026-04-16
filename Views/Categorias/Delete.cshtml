@@ -1,12 +1,10 @@
 @model ProyectoPyme.Models.Categoria
 @{ ViewData["Title"] = "Eliminar Categoría"; Layout = "~/Views/Shared/_AdminLayout.cshtml"; }
 
-<div class="page-header">
-    <div>
-        <h2><i class="fa-solid fa-trash" style="color:#f87171;"></i> Eliminar Categoría</h2>
-        <p class="muted">Esta acción no se puede deshacer</p>
-    </div>
-    <a href="/Categorias" class="btn ghost"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+<div class="ordenes-container">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+    <h2><i class="fa-solid fa-trash" style="color:#f87171;"></i> Eliminar Categoría</h2>
+    <a href="/Admin/Categorias" class="btn-back"><i class="fa-solid fa-arrow-left"></i> Volver</a>
 </div>
 <div class="form-card">
     <div class="delete-box">
@@ -15,7 +13,8 @@
         <form method="post" class="actions" style="margin-top:20px;">
             <input type="hidden" asp-for="CategoriaId" />
             <button type="submit" class="btn danger"><i class="fa-solid fa-trash"></i> Sí, eliminar</button>
-            <a asp-action="Index" class="btn ghost">Cancelar</a>
+            <a href="/Admin/Categorias" class="btn-back">Cancelar</a>
         </form>
     </div>
+</div>
 </div>

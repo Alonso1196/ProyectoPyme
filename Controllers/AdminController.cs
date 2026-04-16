@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
 using ProyectoPyme.Models;
 
 namespace ProyectoPyme.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly string conexion;
@@ -11,6 +13,18 @@ namespace ProyectoPyme.Controllers
         public AdminController(IConfiguration configuration)
         {
             conexion = configuration.GetConnectionString("DefaultConnection");
+        }
+
+        // ─── AJAX: Verificar sesión admin ───
+        [HttpGet]
+        public IActionResult VerificarSesion()
+        {
+            return Json(new
+            {
+                autenticado = User.Identity?.IsAuthenticated ?? false,
+                esAdmin = User.IsInRole("Admin"),
+                usuario = User.Identity?.Name ?? ""
+            });
         }
 
         // Lista de órdenes
@@ -46,6 +60,7 @@ namespace ProyectoPyme.Controllers
 
         // Actualizar estado de la orden
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult ActualizarEstado(int idOrden, string nuevoEstado)
         {
             using (MySqlConnection conn = new MySqlConnection(conexion))

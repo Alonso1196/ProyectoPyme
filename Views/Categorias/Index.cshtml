@@ -3,12 +3,10 @@
 
 @if (User.IsInRole("Admin"))
 {
-    <div class="page-header">
-        <div>
-            <h2><i class="fa-solid fa-layer-group" style="color:var(--amber-light);"></i> Categorías de Perfumes</h2>
-            <p class="muted">Organiza tus perfumes por categorías y familias olfativas</p>
-        </div>
-        <a href="/Categorias/Create" class="btn primary amber"><i class="fa-solid fa-plus"></i> Nueva categoría</a>
+    <div class="ordenes-container">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+        <h2><i class="fa-solid fa-layer-group" style="color:var(--amber-light);"></i> Categorías de Perfumes</h2>
+        <a href="/Admin/Categorias/Create" class="btn primary amber"><i class="fa-solid fa-plus"></i> Nueva categoría</a>
     </div>
     <div class="search-bar">
         <div class="search-field">
@@ -30,14 +28,15 @@
                         <td>@c.Descripcion</td>
                         <td>
                             <div class="action-btns">
-                                <a href="/Categorias/Edit/@c.CategoriaId" class="action-btn edit" title="Editar"><i class="fa-solid fa-pen"></i></a>
-                                <a href="/Categorias/Delete/@c.CategoriaId" class="action-btn delete" title="Eliminar"><i class="fa-solid fa-trash"></i></a>
+                                <a href="/Admin/Categorias/Edit/@c.CategoriaId" class="action-btn edit" title="Editar"><i class="fa-solid fa-pen"></i></a>
+                                <a href="/Admin/Categorias/Delete/@c.CategoriaId" class="action-btn delete" title="Eliminar"><i class="fa-solid fa-trash"></i></a>
                             </div>
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
+    </div>
     </div>
 }
 else

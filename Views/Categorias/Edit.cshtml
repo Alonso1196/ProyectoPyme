@@ -1,11 +1,10 @@
 @model ProyectoPyme.Models.Categoria
 @{ ViewData["Title"] = "Editar Categoría"; Layout = "~/Views/Shared/_AdminLayout.cshtml"; }
 
-<div class="page-header">
-    <div>
-        <h2><i class="fa-solid fa-pen" style="color:var(--amber-light);"></i> Editar Categoría</h2>
-    </div>
-    <a href="/Categorias" class="btn ghost"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+<div class="ordenes-container">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+    <h2><i class="fa-solid fa-pen" style="color:var(--amber-light);"></i> Editar Categoría</h2>
+    <a href="/Admin/Categorias" class="btn-back"><i class="fa-solid fa-arrow-left"></i> Volver</a>
 </div>
 
 <form method="post" class="form-card">
@@ -21,6 +20,7 @@
     </div>
     <div class="actions">
         <button type="submit" class="btn primary amber"><i class="fa-solid fa-floppy-disk"></i> Guardar</button>
-        <a href="/Categorias" class="btn ghost">Cancelar</a>
+        <a href="/Admin/Categorias" class="btn-back">Cancelar</a>
     </div>
 </form>
+</div>

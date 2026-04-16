@@ -23,6 +23,9 @@ namespace ProyectoPyme.Controllers
 		[AllowAnonymous]
 		public async Task<IActionResult> Index(string? q)
 		{
+			if (Request.Path.StartsWithSegments("/Admin") && !User.IsInRole("Admin"))
+				return Forbid();
+
 			var productos = _context.Productos
 				.Include(p => p.Categoria)
 				.Include(p => p.Esencia)
@@ -205,7 +208,40 @@ namespace ProyectoPyme.Controllers
 			_context.Productos.Remove(producto);
 			await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Index), new { success = true });
+			return RedirectToAction(nameof(Index), new { success = true });
+		}
+
+		// ─── AJAX: Búsqueda en vivo (sugerencias) ───
+		[AllowAnonymous]
+		[HttpGet]
+		public async Task<IActionResult> BuscarAjax(string q)
+		{
+			if (string.IsNullOrWhiteSpace(q) || q.Trim().Length < 2)
+				return Json(new List<object>());
+
+			var term = q.Trim().ToLower();
+
+			var resultados = await _context.Productos
+				.Include(p => p.Categoria)
+				.Include(p => p.Esencia)
+				.Where(p =>
+					p.Nombre.ToLower().Contains(term) ||
+					(p.Categoria != null && p.Categoria.Nombre.ToLower().Contains(term)) ||
+					(p.Esencia != null && p.Esencia.Nombre.ToLower().Contains(term)))
+				.Take(6)
+				.Select(p => new
+				{
+					p.ProductoId,
+					p.Nombre,
+					Categoria = p.Categoria != null ? p.Categoria.Nombre : "",
+					Esencia   = p.Esencia != null ? p.Esencia.Nombre : "",
+					Precio    = p.Precio.ToString("N2"),
+					p.Disponibilidad,
+					Imagen = p.RutaImagen ?? ""
+				})
+				.ToListAsync();
+
+			return Json(resultados);
 		}
 
 		private void CargarCombos(int? categoriaId = null, int? esenciaId = null)

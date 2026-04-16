@@ -30,10 +30,11 @@
                         <td style="color:var(--amber-light);font-weight:600;">@orden.Total.ToString("C")</td>
                         <td><span class="orden-badge @estadoClase">@orden.Estado</span></td>
                         <td>
-                            <a asp-controller="Admin" asp-action="DetalleOrden" asp-route-idOrden="@orden.IdOrden" class="action-btn view" title="Ver detalle"><i class="fa-solid fa-eye"></i></a>
+                            <a href="/Admin/Ordenes/Detalle/@orden.IdOrden" class="action-btn view" title="Ver detalle"><i class="fa-solid fa-eye"></i></a>
                             @if (orden.Estado.ToLower() == "pendiente")
                             {
-                                <form asp-controller="Admin" asp-action="ActualizarEstado" method="post" style="display:inline-flex;align-items:center;gap:6px;">
+                                <form action="/Admin/Ordenes/ActualizarEstado" method="post" style="display:inline-flex;align-items:center;gap:6px;">
+                                    @Html.AntiForgeryToken()
                                     <input type="hidden" name="idOrden" value="@orden.IdOrden" />
                                     <select name="nuevoEstado" class="input" style="padding:5px 10px;font-size:13px;">
                                         <option value="Pagado">Pagado</option>

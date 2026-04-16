@@ -1,8 +1,8 @@
 @model ProyectoPyme.Models.DetalleOrdenViewModel
 @{ ViewData["Title"] = "Detalle de Orden"; Layout = "~/Views/Shared/_AdminLayout.cshtml"; }
 
-<h2 class="page-title">
-    <i class="fa-solid fa-receipt" style="color:var(--blue-light);"></i>
+<div class="ordenes-container">
+<h2><i class="fa-solid fa-receipt" style="color:var(--blue-light);"></i>
     Detalle de la Orden <span class="muted">#@Model.Orden.NumeroOrden</span>
 </h2>
 
@@ -41,5 +41,6 @@
 </div>
 
 <div class="actions" style="margin-top:24px;">
-    <a href="@Url.Action("Ordenes", "Admin")" class="btn-back"><i class="fa-solid fa-arrow-left"></i> Volver a Órdenes</a>
+    <a href="/Admin/Ordenes" class="btn-back"><i class="fa-solid fa-arrow-left"></i> Volver a Órdenes</a>
+</div>
 </div>

@@ -20,13 +20,13 @@
             <a href="/Home/Index" class="sidebar-link @(ViewData["Title"]?.ToString() == "Inicio" ? "active" : "")">
                 <i class="fa-solid fa-gauge"></i><span>Panel</span>
             </a>
-            <a href="/Productos" class="sidebar-link @(ViewData["Title"]?.ToString()?.Contains("roducto") == true ? "active" : "")">
+            <a href="/Admin/Productos" class="sidebar-link @(ViewData["Title"]?.ToString()?.Contains("roducto") == true ? "active" : "")">
                 <i class="fa-solid fa-droplet"></i><span>Perfumes</span>
             </a>
-            <a href="/Categorias" class="sidebar-link @(ViewData["Title"]?.ToString()?.Contains("ategoría") == true ? "active-amber" : "")">
+            <a href="/Admin/Categorias" class="sidebar-link @(ViewData["Title"]?.ToString()?.Contains("ategoría") == true ? "active-amber" : "")">
                 <i class="fa-solid fa-layer-group"></i><span>Categorías</span>
             </a>
-            <a href="@Url.Action("Ordenes", "Admin")" class="sidebar-link @(ViewData["Title"]?.ToString()?.Contains("rden") == true ? "active" : "")">
+            <a href="/Admin/Ordenes" class="sidebar-link @(ViewData["Title"]?.ToString()?.Contains("rden") == true ? "active" : "")">
                 <i class="fa-solid fa-receipt"></i><span>Órdenes</span>
             </a>
             <div class="sidebar-spacer"></div>

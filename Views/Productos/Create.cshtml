@@ -1,12 +1,10 @@
 @model ProyectoPyme.Models.Productos
 @{ ViewData["Title"] = "Crear producto"; Layout = "~/Views/Shared/_AdminLayout.cshtml"; }
 
-<div class="page-header">
-    <div>
-        <h2><i class="fa-solid fa-plus" style="color:var(--blue-light);"></i> Crear producto</h2>
-        <p class="muted">Agrega un nuevo producto al catálogo</p>
-    </div>
-    <a href="/Productos" class="btn ghost"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+<div class="ordenes-container">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+    <h2><i class="fa-solid fa-plus" style="color:var(--blue-light);"></i> Crear producto</h2>
+    <a href="/Admin/Productos" class="btn-back"><i class="fa-solid fa-arrow-left"></i> Volver</a>
 </div>
 
 @if (!ViewData.ModelState.IsValid)
@@ -56,8 +54,9 @@
     </div>
     <div class="actions">
         <button type="submit" class="btn primary"><i class="fa-solid fa-floppy-disk"></i> Guardar</button>
-        <a href="/Productos" class="btn ghost">Cancelar</a>
+        <a href="/Admin/Productos" class="btn-back">Cancelar</a>
     </div>
 </form>
+</div>
 
 @section Scripts { <partial name="_ValidationScriptsPartial" /> }

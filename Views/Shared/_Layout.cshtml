@@ -23,18 +23,18 @@
                     <a href="/Productos"><i class="fa-solid fa-droplet"></i> Productos</a>
                     @if (User.IsInRole("Admin"))
                     {
-                        <a href="/Productos/Create" class="admin-link"><i class="fa-solid fa-plus"></i> Nuevo Producto</a>
-                        <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("Ordenes", "Admin")">Órdenes de Clientes</a>
-                        </li>
+                        <a href="/Admin/Productos/Create" class="admin-link"><i class="fa-solid fa-plus"></i> Nuevo Producto</a>
+                        <a href="/Admin/Ordenes" class="admin-link"><i class="fa-solid fa-receipt"></i> Órdenes de Clientes</a>
                     }
                 </nav>
             </div>
             <div class="navbar-search">
-                <form action="/Productos" method="get" class="navbar-search-form">
-                    <input type="text" name="q" class="navbar-search-input" placeholder="Buscar perfumes, categorías, esencias..." value="@Context.Request.Query["q"]" autocomplete="off" />
+                <form action="/Productos" method="get" class="navbar-search-form" id="searchForm">
+                    <input type="text" name="q" id="ajaxSearchInput" class="navbar-search-input" placeholder="Buscar perfumes, categorías, esencias..." value="@Context.Request.Query["q"]" autocomplete="off" />
                     <button type="submit" class="navbar-search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
                 </form>
+                <div id="searchDropdown" class="search-dropdown"></div>
+                <div id="searchError" class="search-error-toast" style="display:none;"></div>
             </div>
             <div class="navbar-right">
                 @if (User.Identity != null && User.Identity.IsAuthenticated && !User.IsInRole("Admin"))
@@ -73,6 +73,114 @@
     </main>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+    @* AJAX Live Search *@
+    <script>
+    $(function () {
+        var $input    = $('#ajaxSearchInput'),
+            $dropdown = $('#searchDropdown'),
+            $toast    = $('#searchError'),
+            timer     = null;
+
+        // ── Utilidad: escapar HTML para evitar XSS ──
+        function esc(s) {
+            var d = document.createElement('div');
+            d.appendChild(document.createTextNode(s));
+            return d.innerHTML;
+        }
+
+        // ── Mostrar toast de error (client-side, NO afecta middleware) ──
+        function showToast(msg) {
+            $toast.html('<i class="fa-solid fa-triangle-exclamation"></i> ' + esc(msg))
+                  .fadeIn(200);
+            setTimeout(function () { $toast.fadeOut(300); }, 4000);
+        }
+
+        // ── Evento: tecleo con debounce 300 ms ──
+        $input.on('input', function () {
+            clearTimeout(timer);
+            var q = $.trim($input.val());
+
+            if (q.length < 2) { $dropdown.hide().empty(); return; }
+
+            timer = setTimeout(function () {
+                $.ajax({
+                    url: '/Productos/BuscarAjax',
+                    data: { q: q },
+                    type: 'GET',
+                    dataType: 'json',
+                    timeout: 5000,
+
+                    success: function (data) {
+                        $dropdown.empty();
+                        if (!data || data.length === 0) {
+                            $dropdown.html('<div class="sr-empty">Sin resultados para "' + esc(q) + '"</div>').show();
+                            return;
+                        }
+                        $.each(data, function (_, p) {
+                            var avail = p.disponibilidad
+                                ? '<span class="sr-avail in">Disponible</span>'
+                                : '<span class="sr-avail out">Agotado</span>';
+                            var img = p.imagen
+                                ? '<img class="sr-img" src="' + esc(p.imagen) + '" alt="">'
+                                : '<div class="sr-img sr-noimg"><i class="fa-solid fa-image"></i></div>';
+                            $dropdown.append(
+                                '<a class="sr-item" href="/Productos/Details/' + p.productoId + '">' +
+                                    img +
+                                    '<div class="sr-info">' +
+                                        '<span class="sr-name">' + esc(p.nombre) + '</span>' +
+                                        '<span class="sr-meta">' + esc(p.categoria) + ' · ' + esc(p.esencia) + '</span>' +
+                                        '<span class="sr-price">₡' + esc(p.precio) + '</span> ' + avail +
+                                    '</div>' +
+                                '</a>'
+                            );
+                        });
+                        $dropdown.show();
+                    },
+
+                    error: function (xhr, status) {
+                        $dropdown.hide().empty();
+                        if (status === 'timeout')       showToast('La búsqueda tardó demasiado. Intentá de nuevo.');
+                        else if (xhr.status === 0)      showToast('Sin conexión al servidor.');
+                        else if (xhr.status === 403)    showToast('No tenés permiso para esta acción.');
+                        else if (xhr.status >= 500)     showToast('Error del servidor (' + xhr.status + '). Intentá más tarde.');
+                        else                            showToast('Error inesperado (' + (xhr.status || status) + ').');
+                    }
+                });
+            }, 300);
+        });
+
+        // ── Cerrar dropdown al hacer clic fuera ──
+        $(document).on('click', function (e) {
+            if (!$(e.target).closest('.navbar-search').length) $dropdown.hide();
+        });
+
+        // ── AJAX SEGURIDAD: Interceptar links admin ──
+        $(document).on('click', 'a[href^="/Admin"]', function (e) {
+            e.preventDefault();
+            var destino = $(this).attr('href');
+            $.ajax({
+                url: '/Admin/VerificarSesion',
+                type: 'GET', dataType: 'json', timeout: 3000,
+                success: function (data) {
+                    if (data.autenticado && data.esAdmin) {
+                        window.location.href = destino;
+                    } else if (data.autenticado) {
+                        showToast('⛔ Acceso denegado — se requiere rol Admin.', 'warn');
+                    } else {
+                        showToast('Debés iniciar sesión primero.', 'info');
+                        setTimeout(function () { window.location.href = '/Cuentas/Login'; }, 1500);
+                    }
+                },
+                error: function (xhr) {
+                    if (xhr.status === 403 || xhr.status === 401) showToast('⛔ Acceso denegado.', 'warn');
+                    else showToast('Error al verificar permisos.');
+                }
+            });
+        });
+    });
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
